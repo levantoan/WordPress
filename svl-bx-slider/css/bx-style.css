@@ -18,10 +18,16 @@
 }
 .slider_list{
 	margin: 10px 0;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
 }
 .them_img {
-    float: left;
     width: 100%;
     margin-top: 10px;
     clear: both;
+}
+.js-image {
+    font-size: 0;
+    line-height: 0;
+    margin-bottom: 10px;
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Bx Slider
+Plugin Name: BxSlider
 Plugin URI: http://levantoan.com/
 Description: jQuery bx slider for WordPress.
 Author: Le Van Toan
@@ -25,7 +25,8 @@ class bxslider{
 			'path'				=> apply_filters('svl/helpers/get_path', __FILE__),
 			'dir'				=> apply_filters('svl/helpers/get_dir', __FILE__),
 			'hook'				=> basename( dirname( __FILE__ ) ) . '/' . basename( __FILE__ ),
-			'version'			=> '1.0.0'
+			'version'			=> '1.0.0',
+			'default_img'		=> 'images/default-placeholder.png',
 		);
 		
 		// set text domain
@@ -63,22 +64,54 @@ class bxslider{
 		$bxslider_meta = get_post_meta( $post->ID,'bxslider_data',true );
 		?>
 		<div class="bx_wrap">
-			<div id="clonedInput0" class="slider_list clonedInput">
+		<?php if(!empty($bxslider_meta) && $bxslider_meta):$stt = 0;?>
+		<?php foreach ($bxslider_meta as $slider):?>
+			<div id="clonedInput<?php echo $stt;?>" class="slider_list clonedInput" slider-data="<?php echo $stt;?>">
 				<div class="bx_left">
-					<?php if ( isset ( $bxslider_meta ) && $bxslider_meta['images'] != '') echo '<img class="has_image" src="'.$bxslider_meta['images'].'">'; ?>
-					<div class="js-image"></div>
-					<input type="hidden" name="bx_image" id="bx_image" value="<?php if ( isset ( $bxslider_meta ) ) echo $bxslider_meta['images']; ?>" />
+					<div class="js-image">
+						<img class="has_image" src="<?php echo (!empty($slider['images'])) ? $slider['images'] : $this->settings['dir'].$this->settings['default_img'];?>">
+					</div>
+					<input type="hidden" name="bx_image[]" class="bx_image" id="bx_image<?php echo $stt;?>" value="<?php echo $slider['images']; ?>" />
 					<input type="button" id="meta-image-button" class="button" value="<?php _e( 'Chọn Ảnh', 'devvn' )?>" />
 					<input type="button" id="delete-image-button" class="button" value="<?php _e( 'Xóa Ảnh', 'devvn' )?>" />
+					<input type="button" id="delete-slider-button" class="button" value="<?php _e( 'Xóa Slider', 'devvn' )?>" />
 				</div>
 				<div class="bx_right">
 					<p>					
-						<input type="text" name="bx_title" id="bx_title" placeholder="Tiêu đề" value="<?php if ( isset ( $bxslider_meta ) ) echo $bxslider_meta['title']; ?>" />
+						<input type="text" name="bx_title[]" id="bx_title" placeholder="Tiêu đề" value="<?php echo $slider['title']; ?>" />
+					</p>
+					<p>					
+						<textarea name="bx_desc[]" id="bx_desc" placeholder="Mô tả"/><?php echo $slider['desc']; ?></textarea>
 					</p>
 				</div>
-				<?php $this->chuc_nang_func();?>
 			</div>
+			<?php $stt++;endforeach;?>
+		<?php else:?>
+			<div id="clonedInput0" class="slider_list clonedInput" slider-data="0">
+				<div class="bx_left">
+					<div class="js-image">
+						<img class="has_image" src="<?php echo $this->settings['dir'].$this->settings['default_img'];?>"/>
+					</div>
+					<input type="hidden" name="bx_image[]" id="bx_image0" class="bx_image" value="<?php if ( isset ( $bxslider_meta ) ) echo $bxslider_meta['images']; ?>" />
+					<input type="button" id="meta-image-button" class="button" value="<?php _e( 'Chọn Ảnh', 'devvn' )?>" />
+					<input type="button" id="delete-image-button" class="button" value="<?php _e( 'Xóa Ảnh', 'devvn' )?>" />
+					<input type="button" id="delete-slider-button" class="button" value="<?php _e( 'Xóa Slider', 'devvn' )?>" />
+				</div>
+				<div class="bx_right">
+					<p>					
+						<input type="text" name="bx_title[]" id="bx_title" placeholder="Tiêu đề" />
+					</p>
+					<p>					
+						<textarea name="bx_desc[]" id="bx_desc" placeholder="Mô tả"/></textarea>
+					</p>
+				</div>
+			</div>
+		<?php endif;?>
 		</div>
+		<?php $this->chuc_nang_func();?>
+		<pre>
+		<?php print_r($bxslider_meta)?>
+		</pre>
 		<?php 
 	}
 	/*Chức năng*/
@@ -99,11 +132,17 @@ class bxslider{
 			return;
 		}
 		
-		$meta_array = array(
-			'images'	=>	$_POST['bx_image'],
-			'title'	=>	$_POST['bx_title'],
-		);
-		
+		extract($_POST);
+		$meta_array = array();
+		if(is_array($bx_image)):
+		foreach ($bx_image as $k=>$img){
+			$meta_array[$k] = array(
+				'images'	=>	$img,
+				'title'		=>	$bx_title[$k],
+				'desc'		=>	$bx_desc[$k]
+			);
+		}
+		endif;
 		update_post_meta($post_id,'bxslider_data',$meta_array);
 	}
 	/*Thêm jquery admin*/
@@ -116,8 +155,10 @@ class bxslider{
 			wp_register_script( 'meta-box-bximage', plugin_dir_url( __FILE__ ) . 'js/meta-box-image.js', array( 'jquery' ) );
 			wp_localize_script( 'meta-box-bximage', 'meta_image',
 				array(
-					'title' => __( 'Chọn hoặc tải ảnh', 'devvn' ),
-					'button' => __( 'Sử dụng ảnh này', 'devvn' ),
+					'title' 		=> __( 'Chọn hoặc tải ảnh', 'devvn' ),
+					'button' 		=> __( 'Sử dụng ảnh này', 'devvn' ),
+					'dir' 			=> $this->settings['dir'],
+					'default_img' 	=> $this->settings['default_img'],
 				)
 			);
 			wp_enqueue_script( 'meta-box-bximage' );
