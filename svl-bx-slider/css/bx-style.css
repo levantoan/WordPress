@@ -1,0 +1,27 @@
+.has_image {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+}
+.bx_wrap,.slider_list {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+.bx_left {
+    float: left;
+    width: 200px;
+}
+.bx_right {
+    float: right;
+    width: calc(100% - 200px - 20px);
+}
+.slider_list{
+	margin: 10px 0;
+}
+.them_img {
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    clear: both;
+}
