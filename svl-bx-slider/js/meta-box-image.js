@@ -2,7 +2,8 @@
  * Attaches the image uploader to the input field
  */
 jQuery(document).ready(function($){
-
+	//Sortable
+	$('.bx_wrap').sortable();
 	// Instantiates the variable that holds the media library frame.
 	var meta_image_frame;
 	//Them Slider

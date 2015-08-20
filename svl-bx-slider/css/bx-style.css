@@ -4,9 +4,12 @@
     height: auto;
 }
 .bx_wrap,.slider_list {
-    overflow: hidden;
+    float: left;
     width: 100%;
     position: relative;
+}
+.bx_wrap .slider_list{
+	background: #fff;
 }
 .bx_left {
     float: left;
@@ -29,5 +32,20 @@
 .js-image {
     font-size: 0;
     line-height: 0;
-    margin-bottom: 10px;
+    margin: 10px 0;
+}
+.bx_wrap input:not([type='checkbox']):not([type="button"]),
+.bx_wrap textarea{
+	width: 	100%;
+}
+.slider_list.ui-sortable-helper{
+	cursor: move !important;
+	opacity: 0.8;
+}
+.slider_list.ui-sortable-placeholder{
+	border: 1px dotted #ccc;
+	visibility: visible !important;
+}
+.bx_right > p{
+	margin-top: 0;
 }
