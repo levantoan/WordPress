@@ -1,0 +1,5 @@
+﻿SELECT id, (LENGTH(post_excerpt) - LENGTH(REPLACE(post_excerpt, 'dui', '')))/LENGTH('dui') AS text_count
+FROM em_posts 
+WHERE post_excerpt LIKE '%dui%' 
+AND post_type = 'document'
+ORDER BY text_count DESC
