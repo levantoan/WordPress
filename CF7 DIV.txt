@@ -72,3 +72,27 @@ div.wpcf7 img.ajax-loader {
     top: 9px;
     right: 15px;
 }
+span.wpcf7-not-valid-tip {
+    color: #FFF;
+    font-size: 1em;
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: #f0ad4e;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    line-height: 39px;
+    padding: 0px 10px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+span.wpcf7-form-control-wrap {
+    position: relative;
+    display: block;
+}
+/*JS*/
+$('.wpcf7-not-valid-tip').live('mouseover mouseout click', function() {
+	$(this).fadeOut();
+});
