@@ -1,0 +1,74 @@
+<div class="cf7_wrap">
+<div class="cf7_col1">[text* your-name placeholder "Name"]</div>
+<div class="cf7_col2">[tel* your-tel placeholder "Phone"]</div>
+</div>
+<div class="cf7_wrap">
+<div class="cf7_row">[email* your-email placeholder "Email"]</div>
+</div>
+<div class="cf7_wrap">
+<div class="cf7_row">[textarea your-message placeholder "Message"]</div>
+</div>
+<div class="cf7_submit">[submit "Send Message"]</div>
+
+
+/*CSS*/
+
+/*cf7 style*/
+.cf7_wrap {
+    width: 100%;
+    margin-bottom: 4px;
+    overflow: hidden;
+}
+.cf7_wrap input,
+.cf7_wrap textarea{
+    width: 100%;
+    padding: 5px 10px;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    background: #fff;
+}
+.cf7_wrap input{
+	height: 39px;
+}
+.cf7_wrap textarea{
+	height: 125px;
+}
+.cf7_col1 {
+    width: 50%;
+    float: left;
+    padding-right: 2px;
+}
+.cf7_col2 {
+    width: 50%;
+    float: right;
+    padding-left: 2px;
+}
+.cf7_submit {
+    text-align: right;
+    margin-top: 15px;
+}
+.wpcf7-form-control.wpcf7-submit {
+    border: 1px solid #b07000;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    background: #ffa300;
+    width: 162px;
+    height: 42px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    float: right;
+}
+.wpcf7-form-control.wpcf7-submit:hover{
+	border: 1px solid #000;
+	background: #000;
+    color: #fff;
+}
+div.wpcf7 img.ajax-loader {
+    position: relative;
+    top: 9px;
+    right: 15px;
+}
