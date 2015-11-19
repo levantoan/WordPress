@@ -12,15 +12,14 @@
 
 
 /*CSS*/
-
 /*cf7 style*/
 .cf7_wrap {
     width: 100%;
-    margin-bottom: 4px;
     overflow: hidden;
 }
 .cf7_wrap input,
-.cf7_wrap textarea{
+.cf7_wrap textarea,
+.cf7_wrap select{
     width: 100%;
     padding: 5px 10px;
     border: 1px solid #aaa;
@@ -28,22 +27,41 @@
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     background: #fff;
+    -webkit-appearance: none;
 }
-.cf7_wrap input{
+.cf7_wrap input:focus,
+.cf7_wrap textarea:focus{
+	border: 1px solid #ffa300;
+	color: #ffa300;
+	outline: none;
+}
+.cf7_wrap input,
+.cf7_wrap select{
 	height: 39px;
+}
+.cf7_wrap select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAGCAYAAAARx7TFAAAAVklEQVQImX3KQQ3AIBBE0bkjBTHIwUF9sBI2+4VgAwscyqUH0tD+ZC6TJ6AD98+63D0D4wMMd8+SJKAA8wUmULQXEXVHEVF1CmgPakcgSWaWgMvM0v4v8Btn7NLEpSUAAAAASUVORK5CYII=") right 10px center no-repeat #FFF !important;
 }
 .cf7_wrap textarea{
 	height: 125px;
+}
+.cf7_row{
+	margin-bottom: 4px;
 }
 .cf7_col1 {
     width: 50%;
     float: left;
     padding-right: 2px;
+    margin-bottom: 4px;
 }
 .cf7_col2 {
     width: 50%;
     float: right;
     padding-left: 2px;
+    margin-bottom: 4px;
 }
 .cf7_submit {
     text-align: right;
@@ -92,6 +110,16 @@ span.wpcf7-form-control-wrap {
     position: relative;
     display: block;
 }
+@media (max-width: 767px){
+	.cf7_wrap_full_mobile .cf7_col1,
+	.cf7_wrap_full_mobile .cf7_col2{
+    	width: 100%;
+    	padding-left:0;
+    	padding-right:0;
+    	
+	}
+}
+/*End cf7*/
 /*JS*/
 $('.wpcf7-not-valid-tip').live('mouseover mouseout click', function() {
 	$(this).fadeOut();
