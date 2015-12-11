@@ -35,6 +35,15 @@
 	color: #ffa300;
 	outline: none;
 }
+.cf7_wrap input[type="date"]:before {
+   content: attr(placeholder) !important;
+   color: #aaa;
+   margin-right: 0.5em;
+ }
+.cf7_wrap  input[type="date"]:focus:before,
+.cf7_wrap  input[type="date"]:valid:before {
+   content: "";
+ }
 .cf7_wrap input,
 .cf7_wrap select{
 	height: 39px;
