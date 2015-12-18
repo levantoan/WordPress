@@ -1,0 +1,15 @@
+UPDATE mtp_options SET option_value = replace(option_value, 'demo.multipacgh.com', 'multipacgh.com') WHERE option_name = 'home' OR option_name = 'siteurl';
+
+UPDATE mtp_posts SET guid = replace(guid, 'demo.multipacgh.com','multipacgh.com');
+
+UPDATE mtp_posts SET post_content = replace(post_content, 'demo.multipacgh.com', 'multipacgh.com');
+
+UPDATE mtp_postmeta SET meta_value = replace(meta_value,'demo.multipacgh.com','multipacgh.com');
+
+//Revosolution
+UPDATE mtp_revslider_sliders SET `params` = replace(`params`,'demo.multipacgh.com','multipacgh.com');
+
+UPDATE mtp_revslider_slides SET `layers` = replace(`layers`,'demo.multipacgh.com','multipacgh.com')
+
+//Widget
+UPDATE mtp_options SET option_value = replace(option_value, 'demo.multipacgh.com', 'multipacgh.com') WHERE option_name = 'widget_text' OR option_name = 'recently_edited';
