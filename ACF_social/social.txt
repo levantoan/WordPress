@@ -1,0 +1,63 @@
+//list_social
+function list_social(){
+	if(have_rows('social','option')):$stt = 1;?>
+	<style>
+	.social_svl{
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		font-size: 0;
+	}
+	.social_svl li {
+	    display: inline-block;
+	    font-size: 15px;
+	    margin-left: 5px;
+	}
+	.social_svl li a{
+		text-decoration: none;
+		line-height: 1;
+		display: block;
+	}
+	.social_svl li i{
+		width: 32px;
+		height: 32px;
+		display: block;
+		line-height: 32px;
+		text-align: center;
+		border-radius: 50%;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+	}
+	</style>
+	<ul class="social_svl">
+	<?php while (have_rows('social','option')):the_row();
+	$title_social = get_sub_field('title_social','option');
+	$class_icon = get_sub_field('class_icon','option');
+	$bgcolor_social = get_sub_field('bgcolor_social','option');
+	$text_color_social = get_sub_field('text_color_social','option');
+	$hover_bg_color_social = get_sub_field('hover_bg_color_social','option');
+	$hover_text_color_social = get_sub_field('hover_text_color_social','option');
+	$url_social = get_sub_field('url_social','option');
+	$target_social = get_sub_field('target_social','option');
+	$target_social = ($target_social == 'new') ? '_blank' : '';
+	?>
+	<li class="social_<?php echo $stt;?>">
+	<style>
+	.social_<?php echo $stt;?> i{
+		background: <?=$bgcolor_social?>;
+		color: <?=$text_color_social?>;
+	}
+	.social_<?php echo $stt;?> a:hover i{
+		background: <?=$hover_bg_color_social?>;
+		color: <?=$hover_text_color_social?>;
+		text-decoration: none;
+	}
+	</style>
+		<?php if($url_social):?><a target="<?php echo $target_social;?>" href="<?php echo $url_social;?>" title="<?php echo $title_social;?>"><?php endif;?>
+		<i class="fa <?php echo $class_icon;?>"></i>
+		<?php if($url_social):?></a><?php endif;?>
+	</li>
+	<?php $stt++;endwhile;?>
+	</ul>
+	<?php endif;wp_reset_query();
+}
