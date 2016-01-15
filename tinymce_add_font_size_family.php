@@ -1,3 +1,4 @@
+<?php
 /*
 URL http://www.wpexplorer.com/wordpress-tinymce-tweaks/
 */
