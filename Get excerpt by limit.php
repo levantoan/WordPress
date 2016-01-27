@@ -2,7 +2,7 @@
 /*
 Get excerpt by limit
 */
-function excerpt($limit) {
+function excerpt($limit = 20) {
       $excerpt = explode(' ', get_the_excerpt(), $limit);
       $permalink = get_the_permalink();
       if (count($excerpt)>=$limit) {
