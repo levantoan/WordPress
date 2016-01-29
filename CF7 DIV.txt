@@ -35,10 +35,6 @@
 	color: #ffa300;
 	outline: none;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 709b0c72134b182e47843bbb8e7ae56e0e8c9bac
 .cf7_wrap input[type="date"]:before {
    content: attr(placeholder) !important;
    color: #aaa;
