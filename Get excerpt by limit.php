@@ -2,15 +2,15 @@
 /*
 Get excerpt by limit
 */
-function excerpt($limit = 20) {
-      $excerpt = explode(' ', get_the_excerpt(), $limit);
-      $permalink = get_the_permalink();
-      if (count($excerpt)>=$limit) {
-        array_pop($excerpt);
-        $excerpt = implode(" ",$excerpt).' <a href="'.$permalink.'">... View More</a>';
-      } else {
-        $excerpt = implode(" ",$excerpt);
-      } 
-      $excerpt = preg_replace('`\[[^\]]*\]`','',$excerpt);
-      return $excerpt;
+function get_excerpt($limit = 130){
+	$excerpt = get_the_excerpt();
+	if(!$excerpt) $excerpt = get_the_content();
+	$excerpt = preg_replace(" (\[.*?\])",'',$excerpt);
+	$excerpt = strip_shortcodes($excerpt);
+	$excerpt = strip_tags($excerpt);
+	$excerpt = substr($excerpt, 0, $limit);
+	$excerpt = substr($excerpt, 0, strripos($excerpt, " "));
+	$excerpt = trim(preg_replace( '/\s+/', ' ', $excerpt));
+	$excerpt = $excerpt.'... <a href="'.$permalink.'" title="">View more</a>';
+	return $excerpt;
 }
