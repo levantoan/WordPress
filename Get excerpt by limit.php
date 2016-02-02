@@ -11,6 +11,7 @@ function get_excerpt($limit = 130){
 	$excerpt = substr($excerpt, 0, $limit);
 	$excerpt = substr($excerpt, 0, strripos($excerpt, " "));
 	$excerpt = trim(preg_replace( '/\s+/', ' ', $excerpt));
+	$permalink = get_the_permalink();
 	$excerpt = $excerpt.'... <a href="'.$permalink.'" title="">View more</a>';
 	return $excerpt;
 }
