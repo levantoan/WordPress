@@ -1,0 +1,19 @@
+a.pdf::before {
+    content: "\f123";
+    color: #888;
+    font-size: 20px;
+    line-height: 1;
+    font-family: dashicons;
+    text-decoration: inherit;
+    vertical-align: top;
+    padding-right: 5px;
+}
+a.pdf{
+	color: #000;
+	text-decoration: none;
+}
+.mce-i-my-paypal-icon{
+	background-image: url('images/paypal.png') !important;
+	background-size: 15px !important;
+	background-repeat: no-repeat !important;
+}
