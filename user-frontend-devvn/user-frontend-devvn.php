@@ -14,3 +14,6 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 define( pluginVersion ,'0.1');
 
 require_once dirname( __FILE__ ) . '/functions/scripts.php';
+require_once dirname( __FILE__ ) . '/functions/login.php';
+require_once dirname( __FILE__ ) . '/functions/func.php';
+

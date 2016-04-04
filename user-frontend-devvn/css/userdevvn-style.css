@@ -1,0 +1,35 @@
+.devvn-row,.devvn-submit {
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.devvn-row:after,.devvn-submit:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.devvn-submit .submit_button {
+    float: right;
+}
+.devvn-submit p.login-remember {
+    margin: 0;
+    float: left;
+}
+p.devvn-error, p.devvn-success,p.devvn-info {
+    background-color: #F2F2F2;
+    padding: 10px;
+    padding-left: 14px;
+    border-left: 3px solid #7ad03a;
+    margin: 0 0 10px;
+}
+p.devvn-error {
+    border-left: 3px solid #990000;
+}
+p.devvn-info {
+    border-left: 3px solid #31708f;
+}
+.devvn_form label.error {
+    color: red;
+    font-size: 14px;
+    font-weight: normal;
+}
