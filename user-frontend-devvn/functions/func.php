@@ -100,25 +100,6 @@ function devvn_user_lostpass(){
  	die();
 }
 
-add_action( 'login_form_lostpassword', 'do_password_lost' );
-function do_password_lost() {
-    if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
-        $errors = retrieve_password();
-        if ( is_wp_error( $errors ) ) {
-            // Errors found
-            $redirect_url = home_url( 'member-password-lost' );
-            $redirect_url = add_query_arg( 'errors', join( ',', $errors->get_error_codes() ), $redirect_url );
-        } else {
-            // Email sent
-            $redirect_url = home_url( 'member-login' );
-            $redirect_url = add_query_arg( 'checkemail', 'confirm', $redirect_url );
-        }
- 
-        wp_redirect( $redirect_url );
-        exit;
-    }
-}
-
 //Thay đổi URL lost pass
 function my_lost_password_page( $lostpassword_url, $redirect ) {
     return home_url( '/user-dashboard?action=lost_password&redirect_to=' . $redirect );
@@ -137,6 +118,187 @@ function redirect_to_custom_lostpassword() {
     }
 }
 add_action( 'login_form_lostpassword', 'redirect_to_custom_lostpassword' );
+
+function checkPassword($pwd) {
+    $errors = array();
+
+    if (strlen($pwd) < 8) {
+        $errors[] = "Password too short!";
+    }
+
+    if (!preg_match("#[0-9]+#", $pwd)) {
+        $errors[] = "Password must include at least one number!";
+    }
+
+    if (!preg_match("#[a-zA-Z]+#", $pwd)) {
+        $errors[] = "Password must include at least one letter!";
+    }     
+
+    return $errors;
+}
+
+function devvn_retrieve_password() {
+	global $wpdb, $wp_hasher;
+
+	$login = trim( $_POST['user_login'] );
+
+	if ( empty( $login ) ) {
+
+		_e('<p class="devvn-error">Enter a username or e-mail address.</p>', 'devvn' );
+		return false;
+
+	} else {
+		// Check on username first, as customers can use emails as usernames.
+		$user_data = get_user_by( 'login', $login );
+	}
+
+	// If no user found, check if it login is email and lookup user based on email.
+	if ( ! $user_data && is_email( $login ) ) {
+		$user_data = get_user_by( 'email', $login );
+	}
+
+	do_action( 'lostpassword_post' );
+
+	if ( ! $user_data ) {
+		_e('<p class="devvn-error">Invalid username or e-mail.</p>', 'devvn');
+		return false;
+	}
+
+	if ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
+		_e( '<p class="devvn-error">Invalid username or e-mail.</p>', 'devvn' );
+		return false;
+	}
+
+	// redefining user_login ensures we return the right case in the email
+	$user_login = $user_data->user_login;
+
+	do_action( 'retrieve_password', $user_login );
+
+	$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
+
+	if ( ! $allow ) {
+
+		_e( '<p class="devvn-info">Password reset is not allowed for this user</p>', 'devvn' );
+		return false;
+
+	} elseif ( is_wp_error( $allow ) ) {
+
+		_e($allow->get_error_message());
+		return false;
+	}
+
+	$key = wp_generate_password( 20, false );
+
+	do_action( 'retrieve_password_key', $user_login, $key );
+
+	// Now insert the key, hashed, into the DB.
+	if ( empty( $wp_hasher ) ) {
+		require_once ABSPATH . 'wp-includes/class-phpass.php';
+		$wp_hasher = new PasswordHash( 8, true );
+	}
+
+	$hashed = $wp_hasher->HashPassword( $key );
+
+	$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user_login ) );	
+	
+	$message  = __('Hello!,') . "\r\n\r\n";
+	$message .= sprintf( __("You asked us to reset your password for your account using the email address %s."), $user_login) . "\r\n\r\n";
+	$message .= __( "If this was a mistake, or you didn't ask for a password reset, just ignore this email and nothing will happen.", 'devvn' ) . "\r\n\r\n";
+	$message .= __( 'To reset your password, visit the following address:', 'devvn' ) . "\r\n\r\n";	
+	$message .= site_url( "user-dashboard?action=rp&key=".$key."&login=" . rawurlencode( $user_login ), 'devvn' ) . "\r\n\r\n";	
+	$message .= __('Thanks!','devvn');
+	wp_mail(
+		$user_data->user_email,
+		sprintf( __('[%s] Reset your password'), get_option('blogname') ),
+		$message
+	); 
+	_e( '<p class="devvn-success">Check your e-mail for the confirmation link.</p>', 'devvn' );
+	return true;
+}
+
+function userdevvn_process_reset_password() {
+	$posted_fields = array( 'userdevvn_reset_password', 'password_1', 'password_2', 'reset_key', 'reset_login', '_wpnonce' );
+
+	foreach ( $posted_fields as $field ) {
+		if ( ! isset( $_POST[ $field ] ) ) {
+			return;
+		}
+		$posted_fields[ $field ] = $_POST[ $field ];
+	}
+
+	if ( ! wp_verify_nonce( $posted_fields['_wpnonce'], 'reset_password' ) ) {
+		return;
+	}
+
+	$user = userdevvn_check_password_reset_key( $posted_fields['reset_key'], $posted_fields['reset_login'] );
+
+	if ( $user instanceof WP_User ) {
+		if ( empty( $posted_fields['password_1'] ) ) {
+			_e( '<p class="devvn-error">Please enter your password.</p>', 'devvn' );
+			return;
+		}
+
+		if ( $posted_fields[ 'password_1' ] !== $posted_fields[ 'password_2' ] ) {
+			_e( '<p class="devvn-error">Passwords do not match.', 'devvn' );		
+			return;	
+		}
+		$errorCheckPass = checkPassword($posted_fields['password_1']);
+		if($errorCheckPass && is_array($errorCheckPass)){
+			foreach ($errorCheckPass as $error) {
+				_e( '<p class="devvn-error">'.$error.'</p>' );
+			}
+			return;
+		}		
+		userdevvn_reset_password( $user, $posted_fields['password_1'] );			
+		echo '<script>
+		(function($){
+				var url = window.location.href.split("?")[0];		 
+				window.location.assign(url+"?reset=true");
+		})(jQuery)		
+		</script>';
+	}
+}
+
+function userdevvn_check_password_reset_key( $key, $login ) {
+	global $wpdb, $wp_hasher;
+
+	$key = preg_replace( '/[^a-z0-9]/i', '', $key );
+
+	if ( empty( $key ) || ! is_string( $key ) ) {
+		_e( '<p class="devvn-error">Invalid key</p>', 'devvn' );
+		return false;
+	}
+
+	if ( empty( $login ) || ! is_string( $login ) ) {
+		_e( '<p class="devvn-error">Invalid key</p>', 'devvn' );
+		return false;
+	}
+
+	$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_login = %s", $login ) );
+
+	if ( ! empty( $user ) ) {
+		if ( empty( $wp_hasher ) ) {
+			require_once ABSPATH . 'wp-includes/class-phpass.php';
+			$wp_hasher = new PasswordHash( 8, true );
+		}
+
+		$valid = $wp_hasher->CheckPassword( $key, $user->user_activation_key );
+	}
+
+	if ( empty( $user ) || empty( $valid ) ) {
+		_e( '<p class="devvn-error">Invalid key</p>', 'devvn' );
+		return false;
+	}
+
+	return get_userdata( $user->ID );
+}
+function userdevvn_reset_password( $user, $new_pass ) {
+	do_action( 'password_reset', $user, $new_pass );
+
+	wp_set_password( $new_pass, $user->ID );
+
+	wp_password_change_notification( $user );
+}
 
 //Thay đổi URL register
 function my_register_page( $register_url ) {

@@ -8,7 +8,7 @@ function userdevvn_login_func(){
 	<div class="devvn-form">
 		<?php if( $action == 'register' && !is_user_logged_in() ):?>
 			<?php include_once dirname(__FILE__) . '/register-form.php';?>			
-		<?php elseif($action == 'lost_password' && !is_user_logged_in()):?>
+		<?php elseif(($action == 'lost_password' || $action == 'rp') && !is_user_logged_in()):?>
 			<?php include_once dirname(__FILE__) . '/lostpass-form.php';?>
 		<?php else:?>
 			<?php if(!is_user_logged_in()):?>

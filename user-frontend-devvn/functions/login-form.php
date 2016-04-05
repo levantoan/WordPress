@@ -1,6 +1,12 @@
 <form id="devvn_login" class="devvn_form" action="" method="post">
 	<h1>Login</h1>
-    <div class="devvn-status"></div>
+    <div class="devvn-status">
+    <?php 
+    if ( isset( $_GET['reset'] ) && $_GET['reset'] ) {
+		_e( '<p class="devvn-success">Your password has been reset.</p>', 'devvn' );
+	}
+    ?>
+    </div>
     <?php wp_nonce_field('ajax-login-nonce', 'security'); ?>
     <input name="action" value="devvn_user_login" type="hidden"/>
     <div class="devvn-row">
