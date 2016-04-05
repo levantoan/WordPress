@@ -22,6 +22,15 @@
 						}						
 					},
 					customemail: true
+				},
+				user_login: {
+					required: {
+						depends:function(){
+							$(this).val($.trim($(this).val()));
+							return true;
+						}						
+					},
+					customemail: true
 				}
 			},
 			messages: {
@@ -29,14 +38,15 @@
 					required: "Please fill username",
 				},
 				password: "Please fill your password",
-				email: {
-					required: "We need your email address to contact you",
+				register_email: {
+					required: "We need your email address",
 					email: "Your email address must be in the format of name@domain.com"
 				}
 			}
 		});
 		$('form#devvn_login').on('submit', function (e) {
 			if (!$(this).valid()) return false;
+			var url = window.location.href.split('?')[0];
 			$formValue = $(this).serialize();
 			$.ajax({
 	            type: 'POST',
@@ -53,7 +63,7 @@
 	            		$('form#devvn_login')[0].reset();
 		            	$('.devvn-status').html('<p class="devvn-success">'+data.message+'</p>');
 		            	setTimeout(function(){
-		            		location.reload();
+		            		window.location.assign(url);
 	            		},1000);
 	            	}else{
 		            	$('.devvn-status').html('<p class="devvn-error">'+data.message+'</p>');
@@ -79,6 +89,34 @@
 	            	$('.submit_button').removeAttr('disabled');
 	            	if(data.loggedin){
 	            		$('form#devvn_register')[0].reset();
+		            	$('.devvn-status').html('<p class="devvn-success">'+data.message+'</p>');
+		            	setTimeout(function(){
+		            		window.location.assign(url);
+	            		},1000);
+	            	}else{
+		            	$('.devvn-status').html('<p class="devvn-error">'+data.message+'</p>');
+	            	}
+	            }	            
+	        });
+			e.preventDefault();
+		});
+		$('form#devvn_lost_password2').on('submit', function (e) {
+			if (!$(this).valid()) return false;
+			var url = window.location.href.split('?')[0];
+			$formValue = $(this).serialize();
+			$.ajax({
+	            type: 'POST',
+	            dataType: 'json',
+	            url: userdevvn_object.ajaxurl,
+	            data: $formValue,
+	            beforeSend: function(){
+	            	$('.submit_button').attr('disabled', 'disabled');
+	            	$('.devvn-status').html('<p class="devvn-info">Loading...</p>');
+	            },
+	            success: function (data) {
+	            	$('.submit_button').removeAttr('disabled');
+	            	if(data.loggedin){
+	            		$('form#devvn_lost_password')[0].reset();
 		            	$('.devvn-status').html('<p class="devvn-success">'+data.message+'</p>');
 		            	setTimeout(function(){
 		            		window.location.assign(url);

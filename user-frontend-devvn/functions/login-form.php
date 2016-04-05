@@ -16,6 +16,6 @@
     	<p class="login-remember"><label><input name="rememberme" type="checkbox" id="" value="forever" /> <?php _e('Remember Me','devvn');?></label></p>
     </div>
     <div class="devvn-row">
-    <?php if ( get_option( 'users_can_register' ) ):?>New to site? <a href="<?=wp_registration_url()?>">Create an Account</a> | <?php endif;?><a class="text-link" href="<?=wp_lostpassword_url(wp_logout_url())?>">Lost password?</a>
+    <?php if ( get_option( 'users_can_register' ) ):?>New to site? <a href="<?=wp_registration_url()?>">Create an Account</a> | <?php endif;?><a class="text-link" href="<?=wp_lostpassword_url(get_the_permalink())?>">Lost password?</a>
     </div>			
 </form>

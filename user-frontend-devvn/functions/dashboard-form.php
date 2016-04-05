@@ -1,1 +1,1 @@
-a
+<?php echo wp_loginout()?>
