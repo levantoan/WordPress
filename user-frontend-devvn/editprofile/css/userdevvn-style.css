@@ -1,0 +1,144 @@
+/* tab styles
+-------------------------------------------------------------- */
+ul.userdevvn-tabs {
+	border-bottom-color: #ccc;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	padding-bottom: 0;
+	font-size: 23px;
+	font-weight: 400;
+	line-height: 29px;
+	margin-bottom: 16px;
+	list-style-type: none;
+}
+ul#userdevvn-tabs {
+	padding: 0;
+	margin-bottom: 16px;
+	margin-left: 0;
+}
+ul.userdevvn-tabs li {
+	display: inline-block;
+	margin: 0 3px -1px 0;
+}
+ul.userdevvn-tabs li a {
+	padding: 4px 15px 6px;
+	font-size: 18px;
+	vertical-align: top;
+	border-width: 1px;
+	color: #555;
+	border-color: #ccc;
+	text-decoration: none;
+	display: block;
+	border-style: solid;
+	background: #e4e4e4;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+ul.userdevvn-tabs li.highlight a {
+	background-color: #922540;
+	color: #FFFFFF;
+	border-color: #84273e;
+}
+ul.userdevvn-tabs li a.active {
+	color: #000;
+	border-bottom-color: #F1F1F1;
+	background-color: #F1F1F1;
+}
+ul.userdevvn-tabs li.highlight a.active {
+	background-color: #C95874;
+	color: #FFFFFF;
+}
+
+/* field styles
+-------------------------------------------------------------- */
+.userdevvn-field {
+	margin-bottom: 24px;
+}
+.userdevvn-field label {
+	display: block;
+	font-size: 1.6rem;
+	margin-bottom: 4px;
+}
+.userdevvn-select-field label,
+.userdevvn-checkbox-field label {
+	display: inline;
+	margin-right: 10px;
+}
+label.userdevvn_save_description {
+	display: none;
+}
+.userdevvn-field input,
+.userdevvn-textarea-field textarea {
+	margin-bottom: 4px;
+	padding: 5px;
+	font-size: 1.4rem;
+	color: #666666;
+}
+.userdevvn-field input[type="text"],
+.userdevvn-field input[type="email"],
+.userdevvn-field input[type="password"],
+.userdevvn-textarea-field textarea {
+	width: 100%;
+}
+.userdevvn-field p.description {
+	font-size: 1.2rem;
+	font-style: italic;
+	color: #999999;
+}
+.userdevvn-select-field p.description,
+.userdevvn-checkbox-field p.description {
+	display: inline;
+}
+.userdevvn-select-field select {
+	border: 1px solid #ddd;
+	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
+	background-color: #fff;
+	color: #333;
+	outline: 0;
+	-webkit-transition: .05s border-color ease-in-out;
+	transition: .05s border-color ease-in-out;
+	padding: 2px;
+	line-height: 28px;
+	height: 28px;
+	vertical-align: middle;
+	font-size: 1.5rem;
+	margin-right: 10px;
+}
+.userdevvn-save input[type="submit"] {
+	background-color: #f7f7f7;
+	border-radius: 5px;
+	border: 1px solid #CCCCCC;
+	font-size: 1.5rem;
+	text-align: center;
+	padding: 6px 12px;
+	display: block;
+	color: #555555;
+	box-shadow: inset 0 1px 0 #fff,0 1px 0 rgba(0,0,0,.08);
+	cursor: pointer;
+}
+.userdevvn-field textarea.wp-editor-area,
+.userdevvn-field .quicktags-toolbar {
+	border: 1px solid #CCCCCC;
+}
+.userdevvn-field textarea.wp-editor-area {
+	border-top: none;
+}
+.userdevvn-field .quicktags-toolbar {
+	border-bottom: none;
+}
+.userdevvn-save input[type="submit"]:hover {
+	border: 1px solid #666666;
+}
+
+p.error,
+p.updated {
+	background-color: #F2F2F2;
+	padding: 10px;
+	padding-left: 14px;
+	border-left: 3px solid #7ad03a;
+	display: block !important;
+}
+p.error {
+	border-left: 3px solid #990000;
+}

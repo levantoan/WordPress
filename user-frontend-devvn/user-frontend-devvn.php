@@ -14,8 +14,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 define( pluginVersion ,'0.1');
 
 require_once dirname( __FILE__ ) . '/functions/scripts.php';
-require_once dirname( __FILE__ ) . '/functions/login.php';
 require_once dirname( __FILE__ ) . '/functions/func.php';
+
+require_once dirname( __FILE__ ) . '/editprofile/devvn_editprofile.php';
 
 //Tạo page User khi active plugin
 function userdevvn_activate() {
@@ -61,3 +62,25 @@ function userdevvn_uninstall() {
 	}
 }
 register_uninstall_hook ( __FILE__, 'userdevvn_uninstall' );
+
+function userdevvn_login_func(){
+	$action = $_GET['action'];
+	ob_start();
+	?>
+	<div class="devvn-form">
+		<?php if( $action == 'register' && !is_user_logged_in() ):?>
+			<?php include_once dirname(__FILE__) . '/functions/register-form.php';?>			
+		<?php elseif(($action == 'lost_password' || $action == 'rp') && !is_user_logged_in()):?>
+			<?php include_once dirname(__FILE__) . '/functions/lostpass-form.php';?>
+		<?php else:?>
+			<?php if(!is_user_logged_in()):?>
+				<?php include_once dirname(__FILE__) . '/functions/login-form.php';?>
+			<?php else:?>
+				<?php userdevvn_show_profile();?>
+			<?php endif;?>
+		<?php endif;?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+add_shortcode('userdevvn_login', 'userdevvn_login_func');
