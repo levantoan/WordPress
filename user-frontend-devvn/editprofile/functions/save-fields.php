@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 function userdevvn_save_fields( $tabs, $user_id ) {
 	
 	/* check the nonce */

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 require_once dirname( __FILE__ ) . '/functions/scripts.php';
 require_once dirname( __FILE__ ) . '/functions/default-fields.php';
 require_once dirname( __FILE__ ) . '/functions/tabs.php';
@@ -11,7 +12,9 @@ function userdevvn_show_profile() {
 		return;
 
 	?>
-		
+	<div class="before_wrapper_userdevvn">
+		<?php do_action('before_wrapper_userdevvn');?>
+	</div>
 	<div class="userdevvn-wrapper">
 		
 		<?php
@@ -96,6 +99,7 @@ function userdevvn_show_profile() {
 
 		?>
 	
-	</div><!-- // userdevvn-wrapper -->		
+	</div><!-- // userdevvn-wrapper -->
+	<?php do_action('after_wrapper_userdevvn');?>
 	<?php	
 }

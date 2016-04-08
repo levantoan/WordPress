@@ -84,3 +84,16 @@ function userdevvn_login_func(){
 	return ob_get_clean();
 }
 add_shortcode('userdevvn_login', 'userdevvn_login_func');
+
+add_action( 'init', 'blockusers_init' );
+function blockusers_init() {
+	if ( is_admin() && !current_user_can( 'administrator' ) && !( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		wp_redirect( home_url('/user-dashboard') );
+		exit;
+	}
+}
+
+add_action('before_wrapper_userdevvn','before_wrapper_userdevvn_func');
+function before_wrapper_userdevvn_func(){
+	echo '<a href="'.wp_logout_url().'">Logout</a>';
+}

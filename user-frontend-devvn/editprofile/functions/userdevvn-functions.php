@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 function userdevvn_tab_list_item( $tab ) {	
 	$tab_class = 'tab';	
 	if( $tab[ 'tab_class' ] != '' ) {		
