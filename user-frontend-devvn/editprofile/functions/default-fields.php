@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 function userdevvn_add_profile_tab_meta_fields( $fields ) {	
 	$fields[] = array(
 		'id' => 'user_email', 

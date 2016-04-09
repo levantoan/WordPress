@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 function userdevvn_profile_register_scripts() {
 	
 	/* make sure that jquery is enqueued */

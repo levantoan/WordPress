@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 function userdevvn_add_profile_tab( $tabs ) {
 	
 	$tabs[] = array(

@@ -1,3 +1,4 @@
+<?php defined( 'ABSPATH' ) or die( 'No script kiddies please!' );?>
 <form id="devvn_register" class="devvn_form" action="" method="post">
 	<h1>Register</h1>
     <div class="devvn-status"></div>

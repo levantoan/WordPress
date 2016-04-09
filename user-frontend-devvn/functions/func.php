@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 add_action( 'wp_ajax_nopriv_devvn_user_login', 'devvn_user_login' );
 add_action( 'wp_ajax_nopriv_devvn_user_register', 'devvn_user_register' );
 add_action( 'wp_ajax_nopriv_devvn_user_lostpass', 'devvn_user_lostpass' );
@@ -50,18 +51,19 @@ function devvn_user_register(){
     $user_register = wp_insert_user( $info );
  	if ( is_wp_error($user_register) ){
  		$error  = $user_register->get_error_codes() ;
+ 		$lostPassLink = '<a class="text-link" href="<'.wp_lostpassword_url().'">Lost password?</a>';
 	 	if(in_array('empty_user_login', $error))
 	 		echo json_encode(array('loggedin'=>false, 'message'=>__($user_register->get_error_message('empty_user_login'))));
 	 	elseif(in_array('existing_user_login',$error))
-	 		echo json_encode(array('loggedin'=>false, 'message'=>__('This username is already registered.')));
+	 		echo json_encode(array('loggedin'=>false, 'message'=>__('This username is already registered. '.$lostPassLink)));
 	 	elseif(in_array('existing_user_email',$error))
-        	echo json_encode(array('loggedin'=>false, 'message'=>__('This email address is already registered.')));
+        	echo json_encode(array('loggedin'=>false, 'message'=>__('This email address is already registered. '.$lostPassLink)));
     } else {
     	echo json_encode(array('loggedin'=>true,'message'=>__('Registration complete. Please check your e-mail.')));
    		
    		$message  = __('Hi there,') . "\r\n\r\n";
 		$message .= sprintf( __("Welcome to %s! Here's how to log in:"), get_option('blogname')) . "\r\n\r\n";
-		$message .= wp_login_url() . "\r\n";
+		$message .= wp_login_url() . "\r\n\r\n";
 		$message .= sprintf( __('Username: %s'), $info['user_nicename'] ) . "\r\n";
 		$message .= sprintf( __('Password: %s'), $info['user_pass'] ) . "\r\n\r\n";
 		$message .= sprintf( __('If you have any problems, please contact me at %s.'), get_option('admin_email') ) . "\r\n\r\n";
