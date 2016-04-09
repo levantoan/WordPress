@@ -29,6 +29,9 @@
     background: #fff;
     -webkit-appearance: none;
 }
+.cf7_wrap select option{
+  padding: 5px 10px;
+}
 .cf7_wrap input:focus,
 .cf7_wrap textarea:focus{
 	border: 1px solid #ffa300;
