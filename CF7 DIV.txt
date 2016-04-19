@@ -15,7 +15,11 @@
 /*cf7 style*/
 .cf7_wrap {
     width: 100%;
-    overflow: hidden;
+}
+.cf7_wrap::after {
+    content: "";
+    display: table;
+    clear: both;
 }
 .cf7_wrap input,
 .cf7_wrap textarea,
