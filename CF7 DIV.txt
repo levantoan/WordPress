@@ -126,6 +126,11 @@ span.wpcf7-form-control-wrap {
     position: relative;
     display: block;
 }
+div.wpcf7-response-output {
+    clear: both;
+    float: left;
+    width: 100%;
+}
 @media (max-width: 767px){
 	.cf7_wrap_full_mobile .cf7_col1,
 	.cf7_wrap_full_mobile .cf7_col2{
