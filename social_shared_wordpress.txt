@@ -1,0 +1,25 @@
+/*HTML*/
+
+<div class="sharing">
+	<?php 
+  	$thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'medium' );
+    $urlthumb = $thumb['0'];
+	?>
+	<a class="share" rel="nofollow" href="http://www.facebook.com/sharer.php?u=<?php the_permalink()?>" target="_blank" title="Click to share on Facebook"><i class="fa fa-facebook"></i></a>		
+	<a class="share" rel="nofollow" target="_blank" href="http://twitter.com/home?status=<?php the_title()?> <?php the_permalink()?>" title="Click to share on Twitter"><i class="fa fa-twitter"></i></a>		
+	<a class="pin" rel="nofollow" href="https://www.pinterest.com/pin/create/button/?url=<?php the_permalink()?>&media=<?=$urlthumb?>&description=<?php the_title();?>" target="_blank"><i class="fa fa-pinterest-p"></i></a>
+</div>
+
+/*Jquery*/
+(function($){
+	$(document).ready(function(){
+		$('.share').on('click', function () {
+			window.open(jQuery(this).attr('href'),'share','toolbar=0,status=0,width=540,height=340');
+			return false;
+		});
+		$('.pin').on('click', function () {
+			window.open(jQuery(this).attr('href'),'pin','toolbar=0,status=0,width=750,height=546');
+			return false;
+		});
+	});
+})(jQuery);
