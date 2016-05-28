@@ -1,3 +1,4 @@
+<?php
 /*instagram shortcode
  * Get access_token to http://instagram.pixelunion.net/
  * Or place [CLIENT_ID_HERE] to your Client ID => https://instagram.com/oauth/authorize/?client_id=[CLIENT_ID_HERE]&redirect_uri=http://localhost&response_type=token
