@@ -1,0 +1,5 @@
+add to .htaccess
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^aissalogerot.com [NC]
+RewriteRule ^(.*)$ http://www.aissalogerot.com/$1 [L,R=301]
