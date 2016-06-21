@@ -15,6 +15,7 @@
 /*cf7 style*/
 .wpcf7-form {
     overflow: hidden;
+    margin: 0 0 25px 0;
 }
 .cf7_wrap {
     width: 100%;
@@ -85,7 +86,7 @@
 }
 .cf7_submit {
     text-align: center;
-    margin: 0 0 25px 0;
+    margin: 0;
     overflow: hidden;
 }
 .wpcf7-form-control.wpcf7-submit {
@@ -123,6 +124,7 @@ div.wpcf7-response-output {
     clear: both;
     float: left;
     width: 100%;
+    margin: 20px 0 0;
 }
 @media (max-width: 767px){
 	.cf7_wrap_full_mobile .cf7_col1,
