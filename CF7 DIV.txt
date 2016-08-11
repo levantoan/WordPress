@@ -38,6 +38,21 @@
     -webkit-appearance: none;
     height: 40px
 }
+.cf7_wrap ::-webkit-input-placeholder {
+   color: #125caa;
+}
+
+.cf7_wrap :-moz-placeholder { /* Firefox 18- */
+   color: #125caa;
+}
+
+.cf7_wrap ::-moz-placeholder {  /* Firefox 19+ */
+   color: #125caa;
+}
+
+.cf7_wrap :-ms-input-placeholder {  
+   color: #125caa;
+}
 .cf7_wrap select option{
   padding: 5px 10px;
 }
