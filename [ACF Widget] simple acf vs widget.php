@@ -1,3 +1,4 @@
+<?php
 /*Add Tips widget*/
 class Tips_Widget extends WP_Widget {
 	public function __construct() {
