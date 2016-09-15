@@ -15,8 +15,12 @@ define('YTVIDEOS_DEFAULT_OPTION', serialize(array(
 	'number_col'			=>	'4',
 	'posts_per_page'		=>	'16',
 	'has_sidebar'			=>	0,
+	'page_has_sidebar'		=>	'all',
+	'sidebar_position'		=>	'right',
 	'padding_left_right'	=>	15,
 	'margin_bottom'			=>	30,
+	'main_width'			=>	'66.67',
+	'sidebar_width'			=>	'33.33',
 	'respon_1200'			=>	4,
 	'respon_992'			=>	3,
 	'respon_768'			=>	2
@@ -72,6 +76,50 @@ function ytvideos_pagesize( $query ) {
     }
 }
 add_action( 'pre_get_posts', 'ytvideos_pagesize', 1 );
+
+function class_ytvideos($class = ''){
+	$class_ytvideos = array();
+	if(get_ytvideos_option('has_sidebar')){
+		$class_ytvideos[] = 'has_sidebar';
+		if(get_ytvideos_option('sidebar_position') == 'right'){
+			$class_ytvideos[] = 'ytvideos_right_sidebar';
+		}else{
+			$class_ytvideos[] = 'ytvideos_left_sidebar';
+		}
+	}
+	if ( ! empty( $class ) ) {
+		if ( !is_array( $class ) )
+			$class = preg_split( '#\s+#', $class );
+		$class_ytvideos = array_merge( $class_ytvideos, $class );
+	} else {
+		// Ensure that we always coerce class to being an array.
+		$class = array();
+	}
+	$class_ytvideos = array_map( 'esc_attr', $class_ytvideos );
+	$class_ytvideos = array_unique(apply_filters( 'ytvideos_class', $class_ytvideos, $class ));
+	echo join(' ', $class_ytvideos);
+}
+
+function get_ytvideos_data($field = 'id'){
+	global $post;
+	$vtvideos_data = get_post_meta($post->ID,'vtvideos_data',true);	
+	if(!is_array($vtvideos_data) && empty($vtvideos_data)) return;
+	return (isset($vtvideos_data[$field]))?$vtvideos_data[$field]:'';
+}
+
+function add_breadcrums_ytvideos(){
+	ob_start();
+	?>
+	<div class="breadcrumbs" typeof="BreadcrumbList" vocab="http://schema.org/">
+	    <?php if(function_exists('bcn_display'))
+	    {
+	        bcn_display();
+	    }?>
+	</div>
+	<?php
+	echo ob_get_clean();
+}
+add_action('breadcrumbs_ytvideos', 'add_breadcrums_ytvideos');
 
 include YTVIDEOS_PATH.'admin/inc/load-temp.php';								
 
@@ -191,6 +239,19 @@ function devvn_ytvideos_frontend_styles(){
 	$width = round((100/$number_col),2);
 	$padding_left_right = get_ytvideos_option('padding_left_right');
 	$margin_bottom = get_ytvideos_option('margin_bottom');
+	if(
+		((is_single() && is_singular('videos') && get_post_type() == 'videos') &&
+		(get_ytvideos_option('page_has_sidebar') == 'all' || get_ytvideos_option('page_has_sidebar') == 'single')) 
+		||
+		((is_post_type_archive( 'videos' )) &&
+		(get_ytvideos_option('page_has_sidebar') == 'all' || get_ytvideos_option('page_has_sidebar') == 'archive'))
+	){		
+		$main_width = get_ytvideos_option('main_width');
+		$sidebar_width = get_ytvideos_option('sidebar_width');
+	}else{
+		$main_width = '100';
+		$sidebar_width = '100';
+	}
 	
 	$respon_1200 = get_ytvideos_option('respon_1200');
 	$respon_992 = get_ytvideos_option('respon_992');
@@ -210,8 +271,23 @@ function devvn_ytvideos_frontend_styles(){
 				    margin: 0 0 {$margin_bottom}px;
 				    float: left;
 				}
+				.single_ytvideos_box{
+					padding: 0 {$padding_left_right}px;
+				}
 				.ytvideos_list .ytvideos_box:nth-child({$number_col}n+1){
 					clear: both;
+				}
+				.ytvideos_wrap_sidebar{
+					margin: 0 0 {$margin_bottom}px;
+				}
+				.has_sidebar .ytvideos_wrap_main {
+				    width: {$main_width}%;
+				}
+				.has_sidebar .ytvideos_wrap_sidebar {
+				    width: {$sidebar_width}%;
+				}
+				.ytvideos_wrap_sidebar_box{
+					padding: 0 {$padding_left_right}px;
 				}
 				@media (max-width: 1199px){					
 					.ytvideos_box {
@@ -244,6 +320,12 @@ function devvn_ytvideos_frontend_styles(){
 					}
 					.ytvideos_list .ytvideos_box:nth-child({$respon_768}n+1){
 						clear: both;
+					}
+					.has_sidebar .ytvideos_wrap_main {
+					    width: 100%;
+					}
+					.has_sidebar .ytvideos_wrap_sidebar {
+					    width: 100%;
 					}
 				}
                 ";

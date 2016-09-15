@@ -1,18 +1,14 @@
 <?php get_header();?>
-<div class="ytvideos_wrap <?php if(get_ytvideos_option('has_sidebar')):?>has_sidebar<?php endif;?>">
+<div class="ytvideos_wrap <?php class_ytvideos()?>">
 	<h1 class="main-title"><?php _e('Videos','devvn')?></h1>
 	<?php
 		the_archive_description( '<div class="taxonomy-description">', '</div>' );
 	?>
-	<div class="breadcrumbs" typeof="BreadcrumbList" vocab="http://schema.org/">
-	    <?php if(function_exists('bcn_display'))
-	    {
-	        bcn_display();
-	    }?>
-	</div>
+	<?php do_action('breadcrumbs_ytvideos')?>
 	<div class="ytvideos_container">	
 		<div class="ytvideos_row">
 			<div class="ytvideos_wrap_main">
+			<?php do_action('before_archive_ytvideos_main')?>
 			<?php if(have_posts()):?>
 				<div class="ytvideos_list">
 				<?php while (have_posts()):the_post();?>
@@ -21,11 +17,10 @@
 				</div>
 				<?php ytvideos_paginate();?>
 			<?php endif;?>
+			<?php do_action('after_archive_ytvideos_main')?>
 			</div>
-			<?php if(get_ytvideos_option('has_sidebar')):?>
-			<div class="ytvideos_wrap_sidebar">
-				<?php get_sidebar('videos')?>
-			</div>
+			<?php if(get_ytvideos_option('has_sidebar') && (get_ytvideos_option('page_has_sidebar') == 'all' || get_ytvideos_option('page_has_sidebar') == 'archive')):?>
+				<?php ytvideos_get_template_part('sidebar','videos');?>
 			<?php endif;//End view sidebar?>
 		</div>
 	</div>

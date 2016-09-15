@@ -69,3 +69,15 @@ a.vtvideos-thumbnail {
 .ytvideos_paginate_links .page-numbers:hover{
     background: #12a5b4;
 }
+.has_sidebar.ytvideos_right_sidebar .ytvideos_wrap_main,
+.has_sidebar.ytvideos_left_sidebar .ytvideos_wrap_sidebar {
+    float: left;
+}
+.has_sidebar.ytvideos_right_sidebar .ytvideos_wrap_sidebar,
+.has_sidebar.ytvideos_left_sidebar .ytvideos_wrap_main {
+    float: right;
+}
+.single_ytvideos_box .videoWrapper,
+.single_ytvideos_box_content {
+    margin: 0 0 20px 0;
+}

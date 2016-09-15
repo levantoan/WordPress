@@ -30,7 +30,17 @@
 				<tr>
 					<th scope="row"><label for="has-sidebar">View Sidebar</label></th>
 					<td>
-						<input id="has-sidebar" type="checkbox" name="ytvideos_settings[has_sidebar]" value='1' <?php checked('1',get_ytvideos_option('has_sidebar'))?>/> View sidebar
+						<label><input id="has-sidebar" type="checkbox" name="ytvideos_settings[has_sidebar]" value='1' <?php checked('1',get_ytvideos_option('has_sidebar'))?>/> View sidebar</label><br/>
+						<label><input type="radio" name="ytvideos_settings[page_has_sidebar]" value='all' <?php checked('all',get_ytvideos_option('page_has_sidebar'))?>/> Both</label><br/>
+						<label><input type="radio" name="ytvideos_settings[page_has_sidebar]" value='archive' <?php checked('archive',get_ytvideos_option('page_has_sidebar'))?>/> Archive page</label><br/>
+						<label><input type="radio" name="ytvideos_settings[page_has_sidebar]" value='single' <?php checked('single',get_ytvideos_option('page_has_sidebar'))?>/> Single page</label>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="sidebar-position">Sidebar Position</label></th>
+					<td>
+						<label><input id="sidebar-position" type="radio" name="ytvideos_settings[sidebar_position]" value='right' <?php checked('right',get_ytvideos_option('sidebar_position'))?>/> Right sidebar</label><br>
+						<label><input id="sidebar-position" type="radio" name="ytvideos_settings[sidebar_position]" value='left' <?php checked('left',get_ytvideos_option('sidebar_position'))?>/> Left sidebar</label>
 					</td>
 				</tr>
 			</tbody>
@@ -41,15 +51,27 @@
 				<tr>
 					<th scope="row"><label for="padding_left_right">Padding Left - Right:</label></th>
 					<td>
-						<input id="padding_left_right" type="number" name="ytvideos_settings[padding_left_right]" value="<?php echo get_ytvideos_option('padding_left_right');?>"/>
+						<input id="padding_left_right" type="number" min="0" name="ytvideos_settings[padding_left_right]" value="<?php echo get_ytvideos_option('padding_left_right');?>"/> px
 					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="margin_bottom">Margin bottom video box:</label></th>
 					<td>
-						<input id="margin_bottom" type="number" name="ytvideos_settings[margin_bottom]" value="<?php echo get_ytvideos_option('margin_bottom');?>"/>
+						<input id="margin_bottom" type="number" min="0" name="ytvideos_settings[margin_bottom]" value="<?php echo get_ytvideos_option('margin_bottom');?>"/> px
 					</td>
-				</tr>				
+				</tr>	
+				<tr>
+					<th scope="row"><label for="main_width">Main width:</label></th>
+					<td>
+						<input id="main_width" type="number" min="0" name="ytvideos_settings[main_width]" value="<?php echo get_ytvideos_option('main_width');?>"/> %
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="sidebar_width">Sidebar width:</label></th>
+					<td>
+						<input id="sidebar_width" type="number" min="0" name="ytvideos_settings[sidebar_width]" value="<?php echo get_ytvideos_option('sidebar_width');?>"/> %
+					</td>
+				</tr>			
 			</tbody>
 		</table>
 		<table class="form-table">
