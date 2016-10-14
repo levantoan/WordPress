@@ -1,8 +1,12 @@
 <?php
 define('TEMP_URL_OG',get_stylesheet_directory_uri());
-define('API_MAILCHIMP_OG','086bae59723532254c6f19a9537e0929-us12');
-define('IDLIST_MAILCHIMP_OG','22946e787c');
-define('RESOURCES_TABLE', $wpdb->prefix . "resources");
+$resources_option = wp_parse_args(get_option('resources_options'),array(
+	'mailchimp_api_key'	=>	'',
+	'mailchimp_list_id'	=>	''
+));
+define('API_MAILCHIMP_OG',$resources_option['mailchimp_api_key']);//81e5118c0e569b78adc82200439046c3-us11
+define('IDLIST_MAILCHIMP_OG',$resources_option['mailchimp_list_id']);//2779cace18
+$resources_table = $wpdb->prefix . "resources";
 
 include 'cpt-resources.php';
 include 'cpt-register.php';
@@ -29,9 +33,12 @@ function get_resources_cookie($name = 'resources'){
 function is_resources_logged_in(){
 	if(!get_resources_cookie()) return false;
 	$resources = get_resources_cookie();
-	if(check_user_by_email($resources)) return true;	
+	$checkEmail = checkUserMailchimp($resources);
+	if(!$checkEmail || ($checkEmail && $checkEmail != 'subscribed')) return false;
+	if(check_user_by_email($resources)) return true;		
 	return false;
 }
+
 function subscribedsyncMailchimp($data = array()) {
     $apiKey = API_MAILCHIMP_OG;
     $listId = IDLIST_MAILCHIMP_OG;
@@ -39,13 +46,24 @@ function subscribedsyncMailchimp($data = array()) {
     $memberId = md5(strtolower($data['email']));
     $dataCenter = substr($apiKey,strpos($apiKey,'-')+1);
     $url = 'https://' . $dataCenter . '.api.mailchimp.com/3.0/lists/' . $listId . '/members/' . $memberId;
-
+    /*
+     * Add user to interest group
+     * Get interest category https://us12.api.mailchimp.com/3.0/lists/'.$listId.'/interest-categories?apikey='.$api_mailchimp
+     * Get interest ID https://us12.api.mailchimp.com/3.0/lists/'.$listId.'/interest-categories/'.$interest_category_ID.'/interests?apikey='.$api_mailchimp
+     * */
+	if($data['receive_infor'] == 'yes' ){
+    	$group = array( '53be256b83' => true );
+	}else{
+		$group = array( '53be256b83' => false );
+	}
+    
     $json = json_encode(array(
         'email_address' => $data['email'],
         'status'        => 'pending', // "subscribed","unsubscribed","cleaned","pending"
         'merge_fields'  => array(
             'COMPANY'     => $data['company']
-        )
+        ),
+        'interests'	=> $group
     ));
 
     $ch = curl_init($url);
@@ -68,6 +86,7 @@ function subscribedsyncMailchimp($data = array()) {
     	return false;
     }
 }
+
 function checkUserMailchimp($email = '', $return_array = false) {
     $apiKey = API_MAILCHIMP_OG;
     $listId = IDLIST_MAILCHIMP_OG;
@@ -119,11 +138,13 @@ function save_register_infor_func() {
 			'mess'		=>	'Register error! Please try again later.',
 		));
 	}
-	$company = (isset($_POST['company'])) ? sanitize_title($_POST['company']) : '';
+	$company = (isset($_POST['company'])) ? sanitize_text_field($_POST['company']) : '';
+	$receive_infor = (isset($_POST['receive_infor_f'])) ? sanitize_text_field($_POST['receive_infor_f']) : 'no';
 	
 	$dataRegister = array(
-	    'email'     =>	$email,
-		'company'	=>	$company
+	    'email'     	=>	$email,
+		'company'		=>	$company,
+		'receive_infor'	=>	$receive_infor
 	);
 	$checkEmail = checkUserMailchimp($email);
 	if(!$checkEmail || ($checkEmail && $checkEmail != 'subscribed')){
@@ -219,15 +240,11 @@ function check_user_by_email($email = ''){
 	   	),
 	   	'fields' => 'ids'
 	);
-	$vid_query = new WP_Query( $args );
-	if($vid_query->have_posts()):
-		while ($vid_query->have_posts()):$vid_query->the_post();
-	 		return get_the_ID();
-		endwhile;
-	else:
+	$vid_query = get_posts($args);
+	if(is_array($vid_query) && !empty($vid_query) && !is_wp_error($vid_query))
+		return $vid_query[0];
+	else 
 		return false;
-	endif;wp_reset_query();
-	return false;
 }
 
 function get_user_resources_by_email($email = ''){
@@ -254,24 +271,31 @@ function check_exits_post_by_id($ID = '', $post_type = 'register'){
 		'p'					=>	$ID
 	);
 	$users = get_posts($args);
-	if(is_array($users) && !empty($users) && !is_wp_error($users))
+	if(is_array($users) && !empty($users) && !is_wp_error($users)){
 		return $users[0]->ID;
-	else 
+	}else{ 
+		if($post_type == 'register') delete_resource_by_user_id($ID);
+		if($post_type == 'all-resources') delete_resource_by_file_id($ID);
 		return false;
+	}
 }
 
 /********************************
  * Creat TABLE
 *********************************/
 function creat_table_resources(){	
-	global $wpdb;
-	global $charset_collate;	
-	if($wpdb->get_var("SHOW TABLES LIKE ".RESOURCES_TABLE) != RESOURCES_TABLE) {
-		$sql = "CREATE TABLE ".RESOURCES_TABLE."(
+	global $wpdb, $resources_table;
+	global $charset_collate;
+	/*
+	$sql = "DROP TABLE IF EXISTS $resources_table;";
+    $wpdb->query($sql);*/	
+	if($wpdb->get_var("SHOW TABLES LIKE '$resources_table'") != $resources_table) {
+		$sql = "CREATE TABLE $resources_table(
 					`id` int(10) NOT NULL auto_increment,
 					`user_id` int(10) NOT NULL,
 					`file_id` int(10) NOT NULL,
 					`count` int(10) NOT NULL,
+					`time_down` datetime NOT NULL,
 					PRIMARY KEY ( `id` ) ,
 					INDEX ( `id` )
 				) $charset_collate;";
@@ -285,7 +309,7 @@ add_action( 'after_setup_theme', 'creat_table_resources' );
  * Insert row
 *********************************/
 function add_resources($data = array()){
-	global $wpdb;	
+	global $wpdb, $resources_table;	
 	$data = wp_parse_args($data,array(
 		'user_ID'	=>	'',
 		'file_ID'	=>	''
@@ -294,36 +318,37 @@ function add_resources($data = array()){
 	$fileID = (isset($data['file_ID']))?intval($data['file_ID']):'';
 	$count = 1;
 	
-	if(!$userID || !$fileID) return false;
+	if(!$userID || !$fileID) return false;	
 	
-	$has_resources = get_resource($data);
+	$wpdb->insert( 
+		$resources_table, 
+		array( 
+			'user_id' 	=>	$userID, 
+			'file_id'	=>	$fileID,
+			'count'		=>	$count,
+			'time_down'	=>	current_time('mysql', 1)
+		), 
+		array( 
+			'%d', 
+			'%d',
+			'%d',
+			'%s'
+		) 
+	);
 	
-	if($has_resources){
-		if(update_resources($has_resources))
-			return true;
-		else 
-			return false;
-	}else{
-		$query = "INSERT INTO ".RESOURCES_TABLE." VALUES(NULL,'".
-						$userID."','".
-						$fileID."','".
-						$count."')";
-		$wpdb->query($query);
-		
-		return true;	
-	}
+	return true;
 }
 /********************************
  * Update row
 *********************************/
 function update_resources($ID){
-	global $wpdb;	
+	global $wpdb, $resources_table;	
 	$count = 1;	
 	$currentCount = get_column_resources($ID,'count');
 	if($currentCount) $count = $currentCount + 1;
 		
 	$wpdb->update( 
-		RESOURCES_TABLE, 
+		$resources_table, 
 		array( 
 			'count' => $count,
 		), 
@@ -339,16 +364,31 @@ function update_resources($ID){
  * Delete row
 *********************************/
 function delete_resource($ID){
-	global $wpdb;	
+	global $wpdb, $resources_table;	
 	$ID = intval($ID);		
-	$wpdb->delete( RESOURCES_TABLE, array( 'id' => $ID ), array( '%d' ) );
+	$wpdb->delete( $resources_table, array( 'id' => $ID ), array( '%d' ) );
 	return true;	
 }
+
+function delete_resource_by_user_id($UserID){
+	global $wpdb, $resources_table;	
+	$UserID = intval($UserID);		
+	$wpdb->delete( $resources_table, array( 'user_id' => $UserID ), array( '%d' ) );
+	return true;	
+}
+
+function delete_resource_by_file_id($fileID){
+	global $wpdb, $resources_table;	
+	$fileID = intval($fileID);		
+	$wpdb->delete( $resources_table, array( 'file_id' => $fileID ), array( '%d' ) );
+	return true;	
+}
+
 /********************************
  * Get row
 *********************************/
 function get_resource($data){	
-	global $wpdb;	
+	global $wpdb, $resources_table;	
 	$data = wp_parse_args($data,array(
 		'user_ID'	=>	'',
 		'file_ID'	=>	''
@@ -357,7 +397,7 @@ function get_resource($data){
 	$fileID = (isset($data['file_ID']))?intval($data['file_ID']):'';	
 	
 	$query = "	SELECT id 
-				FROM ".RESOURCES_TABLE." 
+				FROM $resources_table 
 				WHERE user_id = ".$userID."
 				AND	file_id = ".$fileID;	
 						
@@ -371,10 +411,10 @@ function get_resource($data){
  * Get column
 *********************************/
 function get_column_resources($ID = '', $column = 'id'){
-	global $wpdb;		
+	global $wpdb, $resources_table;		
 	
 	$query = "	SELECT ".esc_sql($column)." 
-				FROM ".RESOURCES_TABLE." 
+				FROM $resources_table
 				WHERE id = ".$ID;
 							
 	$resources_ID = $wpdb->get_row($query);
@@ -409,7 +449,7 @@ function count_download_func() {
 }
 
 function get_download_resources($column_name = 'user_id', $id = ''){
-	global $wpdb;
+	global $wpdb, $resources_table;
 	$id = intval($id);
 	$column_name = sanitize_title($column_name);
 	
@@ -418,8 +458,8 @@ function get_download_resources($column_name = 'user_id', $id = ''){
 	
 	$list_download = $wpdb->get_results( 
 		"
-		SELECT id, ".$column_name2.", count
-		FROM ".RESOURCES_TABLE."
+		SELECT id, $column_name2, time_down
+		FROM $resources_table
 		WHERE ".$column_name." = ".$id
 	);
 	if($list_download) return $list_download;
@@ -429,3 +469,106 @@ function get_download_resources($column_name = 'user_id', $id = ''){
 function get_user_email_register($idUser){
 	return get_post_meta($idUser, 'email_user', true);
 };
+
+add_action('admin_menu', 'resources_setting_menu');
+function resources_setting_menu() {
+	add_submenu_page( 
+		'edit.php?post_type=all-resources', 
+		'Setting', 
+		'Resources Setting', 
+		'manage_options', 
+		'resources-setting',
+		'resources_setting_callback'
+	);
+}
+function resources_setting_callback(){
+	include 'options-page.php';
+}
+add_action( 'admin_init', 'resources_register_mysettings' );
+function resources_register_mysettings() {
+	register_setting( 'resources-options-group', 'resources_options' );
+}
+
+function export_data_resourece_func(){
+	if ( !wp_verify_nonce( $_REQUEST['nonce'], "export_nonce_action")) {
+    	exit("No naughty business please");
+	}
+	global $wpdb, $resources_table;
+	error_reporting(E_ALL);
+	ini_set('display_errors', TRUE);
+	ini_set('display_startup_errors', TRUE);
+	date_default_timezone_set('Europe/London');
+	
+	if (PHP_SAPI == 'cli')
+		die('This example should only be run from a Web Browser');
+	
+	/** Include PHPExcel */
+	require_once dirname(__FILE__) . '/PHPExcel/PHPExcel.php';
+	
+	
+	// Create new PHPExcel object
+	$objPHPExcel = new PHPExcel();
+	
+	// Set document properties
+	$objPHPExcel->getProperties()->setCreator("NextStep")
+								 ->setLastModifiedBy("NextStep")
+								 ->setTitle("Resource Download")
+								 ->setSubject("Resource Download")
+								 ->setDescription("")
+								 ->setKeywords("resource download")
+								 ->setCategory("Resource");
+	
+	
+	// Add some data
+	$objPHPExcel->setActiveSheetIndex(0)
+	            ->setCellValue('A1', 'Document')
+	            ->setCellValue('B1', 'Email Address')
+	            ->setCellValue('C1', 'Company')	            
+	            ->setCellValue('D1', 'Date');                   
+	
+	$list_download = $wpdb->get_results( 
+		"
+		SELECT user_id, file_id, time_down
+		FROM $resources_table"
+	);
+	
+	if(isset($list_download) && is_array($list_download)):
+		$stt = 2;
+		foreach ($list_download as $downloader):
+			if(!check_exits_post_by_id($downloader->user_id)) continue;
+			if(!check_exits_post_by_id($downloader->file_id,'all-resources')) continue;
+			$objPHPExcel->setActiveSheetIndex(0)
+	            ->setCellValue('A'.$stt, get_the_title($downloader->file_id))
+	            ->setCellValue('B'.$stt, get_user_email_register($downloader->user_id))	            
+	            ->setCellValue('C'.$stt, get_post_meta($downloader->user_id,'company_user',true))
+	            ->setCellValue('D'.$stt, get_date_from_gmt($downloader->time_down, 'F j, Y H:i:s'));
+		$stt++;
+		endforeach;
+	endif;wp_reset_query();
+	
+	// Rename worksheet
+	$objPHPExcel->getActiveSheet()->setTitle('Resources List Download');
+	
+	
+	// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+	$objPHPExcel->setActiveSheetIndex(0);
+	
+	
+	// Redirect output to a client’s web browser (Excel5)
+	header('Content-Type: application/vnd.ms-excel');
+	header('Content-Disposition: attachment;filename="resources _download_'.date('dmY').'.xls"');
+	header('Cache-Control: max-age=0');
+	// If you're serving to IE 9, then the following may be needed
+	header('Cache-Control: max-age=1');
+	
+	// If you're serving to IE over SSL, then the following may be needed
+	header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+	header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+	header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+	header ('Pragma: public'); // HTTP/1.0
+	
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+	$objWriter->save('php://output');
+	exit;
+}
+add_action( 'wp_ajax_export_data_resourece', 'export_data_resourece_func' );

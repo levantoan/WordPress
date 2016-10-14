@@ -5,6 +5,7 @@
 
 get_header(); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo TEMP_URL_OG?>/resources_source/resources.css">
+<script src="../bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
 <script type='text/javascript'>
 /* <![CDATA[ */
@@ -14,41 +15,54 @@ var og_array = {
 /* ]]> */
 </script>
 <script type='text/javascript' src='<?php echo TEMP_URL_OG?>/resources_source/resources.js'></script>
+
 <?php if(!is_resources_logged_in()):?>
-	<div class="form_resources">
-		<?php do_action('before_form_resources');?>		
-		<div class="form_mess alert"></div>
-		<div id="form_login">
-			<h2 class="title-form">Login</h2>
-			<form action="" method="post">
-			  <div class="form-group">
-			    <label for="email">Email address</label>
-			    <input type="email" class="form-control" name="email_login" id="email_login" placeholder="Email">
-			  </div>			  
-			  <div class="form-group"><p>New to Vortex? <a href="#form_register" title="Register" class="gotoForm" data-form="Register">Register</a></p></div>
-			  <?php wp_nonce_field('login_nonce_action','login_nonce');?>
-			  <button type="submit" class="btn btn-default btn-form btn-login">Submit</button>	 <span class="spinner"></span>		  
-			</form>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">      
+      <div class="modal-body">
+      	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <div class="form_resources">
+			<?php do_action('before_form_resources');?>		
+			<div class="form_mess alert"></div>
+			<div id="form_login">
+				<h2 class="title-form">Login</h2>
+				<form action="" method="post">
+				  <div class="form-group">
+				    <label for="email">Email address</label>
+				    <input type="email" class="form-control" name="email_login" id="email_login" placeholder="Email">
+				  </div>			  
+				  <div class="form-group"><p>New to Vortex? <a href="#form_register" title="Register" class="gotoForm" data-form="Register">Register</a></p></div>
+				  <?php wp_nonce_field('login_nonce_action','login_nonce');?>
+				  <button type="submit" class="btn btn-default btn-form btn-login">Login</button>	 <span class="spinner"></span>		  
+				</form>
+			</div>
+			<div id="form_register">
+				<h2 class="title-form">Register</h2>
+				<form action="" method="post">
+				  <div class="form-group">
+				    <label for="email">Email address</label>
+				    <input type="email" class="form-control" name="email_register" id="email_register" placeholder="Email">
+				  </div>
+				  <div class="form-group">
+				    <label for="company">Company / institution</label>
+				    <input type="text" class="form-control" name="company_register" id="company_register" placeholder="Company/institution">
+				  </div>
+				  <div class="form-group receive_infor_style">
+				  	<label><input type="checkbox" value="yes" name="receive_infor_f" id="receive_infor_f"> I would like to Take the Next Step in the Fight Against Cancer and receive informative emails from Vortex Biosciences</label>
+				  </div>
+				  <div class="form-group"><p>Have an account? <a href="#form_login" title="Login" class="gotoForm" data-form="Login">Login</a></p></div>
+				  <?php wp_nonce_field('register_nonce_action','register_nonce');?>
+				  <button type="submit" class="btn btn-default btn-form btn-register">Sign Up</button> <span class="spinner"></span>
+				</form>
+			</div>
+			<?php do_action('after_form_resources');?>
 		</div>
-		<div id="form_register">
-			<h2 class="title-form">Register</h2>
-			<form action="" method="post">
-			  <div class="form-group">
-			    <label for="email">Email address</label>
-			    <input type="email" class="form-control" name="email_register" id="email_register" placeholder="Email">
-			  </div>
-			  <div class="form-group">
-			    <label for="company">Company / institution</label>
-			    <input type="text" class="form-control" name="company_register" id="company_register" placeholder="Company/institution">
-			  </div>
-			  <div class="form-group"><p>Have an account? <a href="#form_login" title="Login" class="gotoForm" data-form="Login">Login</a></p></div>
-			  <?php wp_nonce_field('register_nonce_action','register_nonce');?>
-			  <button type="submit" class="btn btn-default btn-form btn-register">Submit</button> <span class="spinner"></span>
-			</form>
-		</div>
-		<?php do_action('after_form_resources');?>
-	</div>
-<?php else:?>
+      </div>      
+    </div>
+  </div>
+</div>
+<?php endif;?>
 <?php 
 $resources_category = array(6,7,8,9);
 $category_name = 'resources-category';
@@ -96,12 +110,20 @@ $cat = get_term_by('term_id', $cat_id, $category_name);
 		if($resources_post->have_posts()):
 			while ($resources_post->have_posts()):$resources_post->the_post();
 				$news_date = get_the_date();
-				$news_link = esc_url(get_field('file_download'));
+				if(!is_resources_logged_in()):
+					$news_link = '#register';
+					//$download = '';
+					$class_a = 'login_to_download';
+				else:
+					$news_link = esc_url(get_field('file_download'));
+					//$download = 'download';
+					$class_a = 'save_download';
+				endif;				
 				$news_title = get_the_title();
 				echo '<div class="news-item row-fluid">
-							<div class="span3"><h3>' . $news_date . '</h3></div>
-							<div class="span9"><h3><a download href="'.$news_link.'" class="save_download" data-fileid="'.get_the_ID().'" data-user="'.$currentUserID.'">' . $news_title . '</a></h3></div>    
+							<div class="span12"><h3><a target="_blank" href="'.$news_link.'" class="'.$class_a.'" data-fileid="'.get_the_ID().'" data-user="'.$currentUserID.'">' . $news_title . '</a></h3></div>    
 					  </div>';
+					  //<div class="span3"><h3>' . $news_date . '</h3></div> Removed the Date
 			endwhile;	
 		else: 
 			echo '<div class="news-item row-fluid">
@@ -115,5 +137,4 @@ $cat = get_term_by('term_id', $cat_id, $category_name);
 </div>
 </div>
 <?php $stt++; endforeach;?>
-<?php endif;?>
 <?php get_footer(); ?>

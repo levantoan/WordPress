@@ -32,10 +32,15 @@
 		$('.btn-register').click(function(){
 			if(!$('#form_register form').valid()) return false;
 			mess_active(false);
-			
+			var receive_infor = 0;
 			var nonce_register = $('#register_nonce').val();
 			var email_register = $('#email_register').val();
 			var company_register = $('#company_register').val();
+			if ($('#receive_infor_f').is(":checked")){
+				receive_infor = 'yes';
+			}else{
+				receive_infor = 'no';
+			}
 			$.ajax({
 				type : "post",
 				dataType : "json",
@@ -44,6 +49,7 @@
 					action	: "save_register_infor", 
 					email 	: email_register, 
 					company	: company_register,
+					receive_infor_f : receive_infor,
 					nonce	: nonce_register
 				},
 				context: this,
@@ -51,6 +57,7 @@
 					$('#form_register').addClass('loading');
 				},
 				success: function(response) {
+					//console.log(response);
 					if(response.success){
 						formRegister.fadeOut('400',function(){
 							formLogin.fadeIn();
@@ -103,7 +110,7 @@
 			function(value, element) {
 				return /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value);
 			}, 
-			"Sorry, I've enabled very strict email validation"
+			"Please enter a valid email address."
 		);
 		$('#form_login form').validate({			 
 			onfocusout: function(element) {
@@ -173,6 +180,10 @@
 					//console.log(response);
 				}
 			});
+		});
+		$('.login_to_download').click(function(){
+			$('#exampleModal').modal();
+			return false;
 		});
 	});
 })(jQuery);

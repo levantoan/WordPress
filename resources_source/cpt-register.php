@@ -118,17 +118,18 @@ function user_display_count_callback( $post ) {
     	echo '<tr>
     			<th>ID</th>
     			<th>User Email</th>
-    			<th>Count</th>
+    			<th>Time Download</th>
     		  </tr>
     	';
-    	foreach ($userDownload as $user):
+    	$stt = 1; foreach ($userDownload as $user):
+    		if(!check_exits_post_by_id($user->file_id,'all-resources')) continue;
     		echo '<tr>
-	    			<td>'.$user->id.'</td>
+	    			<td>'.$stt.'</td>
 	    			<td><a href="'.get_edit_post_link($user->file_id).'">'.get_the_title($user->file_id).'</a></td>
-	    			<td>'.$user->count.'</td>
+	    			<td>'.get_date_from_gmt($user->time_down, 'F j, Y H:i:s').'</td>
 	    		  </tr>
 	    	';
-    	endforeach;
+    	$stt++;endforeach;
     	echo '</table>';
     	echo '<style>table.og_table {
 		    margin: 0 0 1.5em;
