@@ -1,5 +1,8 @@
 <?php
-/*remove slug custom post type in url*/
+/*
+* Remove slug custom post type in url
+* http://levantoan.com
+*/
 function devvn_remove_slug( $post_link, $post ) {
     if ( !in_array( get_post_type($post), array( 'product','videos','short_url' ) ) || 'publish' != $post->post_status ) {
         return $post_link;
