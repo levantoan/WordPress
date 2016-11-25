@@ -175,3 +175,39 @@ function devvn_term_permalink( $url, $term, $taxonomy ){
 	
 	return $url;	
 }
+/*redirect 301 for SEO taxonomy*/
+add_action('template_redirect', 'rudr_old_term_redirect'); 
+function rudr_old_term_redirect() {
+ 	
+	$list_taxonomy = array(
+		array(
+			'name'	=>	'product_cat',
+			'slug'	=>	'danh-muc'
+		),
+		array(
+			'name'	=>	'category',
+			'slug'	=>	'category'
+		),
+		array(
+			'name'	=>	'danhmuc_videos',
+			'slug'	=>	'danhmuc-videos'
+		)
+	);
+ 	if(!$list_taxonomy || is_wp_error($list_taxonomy) || !isset($list_taxonomy)) return;
+ 	
+ 	foreach ($list_taxonomy as $aterm):
+ 		$taxonomy_slug = isset($aterm['slug']) ? $aterm['slug'] : 'category';
+ 		$taxonomy_name = isset($aterm['name']) ? $aterm['name'] : 'category';
+		// exit the redirect function if taxonomy slug is not in URL
+		if( strpos( $_SERVER['REQUEST_URI'], $taxonomy_slug ) === FALSE)
+			return;
+	 
+		if( ( is_category() && $taxonomy_name=='category' ) || ( is_tag() && $taxonomy_name=='post_tag' ) || is_tax( $taxonomy_name ) ) :
+	 
+	        	wp_redirect( site_url( str_replace($taxonomy_slug, '', $_SERVER['REQUEST_URI']) ), 301 );
+			exit();
+	 
+		endif;
+	endforeach;
+ 
+}
