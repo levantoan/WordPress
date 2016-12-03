@@ -63,3 +63,15 @@ geoplugin_currencyCode= VND
 geoplugin_currencySymbol= ₫ 
 geoplugin_currencySymbol_UTF8= â‚« 
 geoplugin_currencyConverter= 22365 */
+
+//Meta query in WP
+$yourCountryCode = getLocationByIP(get_client_ip_env(), 'countryCode');
+if($yourCountryCode !== false){
+	$args['meta_query'] = array(
+		array(
+			'key' => 'choose_country',
+			'value' => serialize(strval($yourCountryCode)),
+			'compare' => 'LIKE',
+		)
+	);
+}
