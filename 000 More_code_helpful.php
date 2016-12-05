@@ -17,3 +17,6 @@ function hwl_home_pagesize( $query ) {
     }
 }
 add_action( 'pre_get_posts', 'hwl_home_pagesize', 1 );
+
+//Do filter in ajax
+if (defined( 'DOING_AJAX' ) && DOING_AJAX))
