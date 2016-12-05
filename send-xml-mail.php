@@ -57,8 +57,9 @@ function og_send_mail($data){
 		$femail = $data['your-email'];
 		// main header (multipart mandatory)
 		$headers = "From: {$fname} <{$femail}>" . $eol;
-		$headers .= "MIME-Version: 1.0" . $eol;
-		$headers .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" . $eol;
+		$headers .= "MIME-Version: 1.0" . $eol;		
+		$headers .= "Content-Type: multipart/mixed; charset=UTF-8" . $eol;
+		$headers .= "boundary=\"" . $separator . "\"" . $eol;
 		$headers .= "Content-Transfer-Encoding: 7bit" . $eol;
 		$headers .= "This is a MIME encoded message." . $eol;
 		
