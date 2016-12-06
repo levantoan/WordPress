@@ -13,11 +13,14 @@ UPDATE wp_revslider_sliders SET `params` = replace(`params`,'rubberrobots.com','
 UPDATE wp_revslider_slides SET `params` = replace(`params`,'rubberrobots.com','rmgnetworks.com');
 UPDATE wp_revslider_slides SET `layers` = replace(`layers`,'rubberrobots.com','rmgnetworks.com');
 
+UPDATE wp_revslider_static_slides SET `params` = replace(`params`,'rubberrobots.com','rmgnetworks.com');
+
 //Revo slide http to https
 
 UPDATE wp_revslider_sliders SET `params` = replace(`params`,'http:\\/\\/www.rmgnetworks.com','https:\\/\\/www.rmgnetworks.com');
 UPDATE wp_revslider_slides SET `params` = replace(`params`,'http:\\/\\/www.rmgnetworks.com','https:\\/\\/www.rmgnetworks.com');
 UPDATE wp_revslider_slides SET `layers` = replace(`layers`,'http:\\/\\/www.rmgnetworks.com','https:\\/\\/www.rmgnetworks.com');
+UPDATE wp_revslider_static_slides SET `params` = replace(`params`,'http:\\/\\/rmgnetworks.com','https:\\/\\/www.rmgnetworks.com');
 
 //Widget
 UPDATE mtp_options SET option_value = replace(option_value, 'old-domain.com', 'new-domain.com') WHERE option_name = 'widget_text' OR option_name = 'recently_edited';
