@@ -1,0 +1,99 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+PHP
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+wp_enqueue_media();	
+
+<div class="svl-upload-image">						
+  <div class="view-has-value">
+    <input type="hidden" class="clone_delete" name="ireel[frames][image_color][]" id="ireel[frames][image_color][]" value=""/>								
+    <img src="" class="image_view pins_img"/>
+    <a href="#" class="svl-delete-image">x</a>
+  </div>
+  <div class="hidden-has-value"><input type="button" class="ireel-upload button" value="<?php _e( 'Select images', 'devvn' )?>" /></div>
+</div>
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JS
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<script type="text/javascript">
+(function($){
+  //image upload
+  $('body').on('click','.ireel-upload',function(e){
+    // Prevents the default action from occuring.
+    e.preventDefault();
+    var thisUpload = $(this).parents('.svl-upload-image');
+    // Sets up the media library frame
+    meta_image_frame = wp.media.frames.meta_image_frame = wp.media({
+      title: 'Upload Image',
+      button: { text:  'Upload Image' },
+      library: { type: 'image' },
+      multiple: false
+    });
+    // Runs when an image is selected.
+    meta_image_frame.on('select', function(){
+      // Grabs the attachment selection and creates a JSON representation of the model.
+      var media_attachment = meta_image_frame.state().get('selection').first().toJSON();
+      // Sends the attachment URL to our custom image input field.
+
+      if ( media_attachment.id ) {					
+        var attachment_image = media_attachment.sizes && media_attachment.sizes.thumbnail ? media_attachment.sizes.thumbnail.url : media_attachment.url;
+
+        thisUpload.addClass('has-image');
+        thisUpload.find('input[type="hidden"]').val(media_attachment.id);
+        thisUpload.find('img.image_view').attr('src',media_attachment.url);
+      }
+    });
+    // Opens the media library frame.
+    meta_image_frame.open();
+  });	
+
+
+  $('body').on('click','.svl-delete-image',function(){
+    var parentDiv = $(this).parents('.svl-upload-image');
+    parentDiv.removeClass('has-image');
+    parentDiv.find('input[type="hidden"]').val('');
+    return false;
+  });
+})(jQuery);
+</script>
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CSS
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+<style>
+	.svl-upload-image {
+	    width: 100%;
+	    max-width: 500px;
+	}
+	.svl-upload-image img{	    
+	    max-width: 100%;
+	    height: auto;
+	}
+	.view-has-value {
+	    display: none;
+	    position: relative;
+	}
+	
+	.has-image .view-has-value {
+	    display: block;
+	}
+	
+	.hidden-has-value {
+	    display: block;
+	}
+	
+	.has-image .hidden-has-value {
+	    display: none;
+	}
+	
+	a.svl-delete-image {
+	    position: absolute;
+	    top: 0;
+	    right: 0;
+	    color: #fff;
+	    background: #000;
+	    display: block;
+	    width: 20px;
+	    height: 20px;
+	    text-align: center;
+	    text-decoration: none;
+	}
+	</style>
