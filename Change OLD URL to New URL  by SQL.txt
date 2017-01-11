@@ -28,3 +28,36 @@ UPDATE wp_revslider_static_slides SET `layers` = replace(`layers`,'http:\\/\\/rm
 
 //Widget
 UPDATE mtp_options SET option_value = replace(option_value, 'old-domain.com', 'new-domain.com') WHERE option_name = 'widget_text' OR option_name = 'recently_edited';
+
+
+// PHP search and replace string sql with regex
+add_action( 'wp_ajax_sql_search_replace_regex', 'sql_search_replace_regex_func' );
+function sql_search_replace_regex_func(){
+	global $wpdb;
+	$result = $wpdb->get_results( 
+	"SELECT ID, post_content
+	FROM wp_posts
+	WHERE post_type != 'attachment'", 
+	ARRAY_A );
+	
+	/*if(is_array($result)){
+		foreach ($result as $post_hack){
+			$post_content = preg_replace("/<a .*>.<\/a>/", "", $post_hack['post_content']);
+			$wpdb->update( 
+				'wp_posts', 
+				array( 
+					'post_content' => $post_content,
+				), 
+				array( 'ID' => $post_hack['ID'] ), 
+				array( 
+					'%s',
+				), 
+				array( '%d' )
+			);
+		}
+	}
+	*/
+	echo '<pre>';
+	print_r($result);
+	die();
+}
