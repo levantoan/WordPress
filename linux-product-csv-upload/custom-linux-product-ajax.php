@@ -82,12 +82,7 @@ function linux_product_code_export_custom_menu_page() {
 }
 add_action( 'admin_menu', 'linux_product_code_export_custom_menu_page' );
 
-function devvn_stop_heartbeat() {
-	wp_deregister_script('heartbeat');
-}
-
 function linux_product_export_func(){
-	add_action( 'init', 'devvn_stop_heartbeat', 1 );
 	?>
 	<div class="wrap">
 		<h1>Import Linux Product by CSV</h1>
