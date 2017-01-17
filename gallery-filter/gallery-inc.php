@@ -340,8 +340,23 @@ function devvn_columns_content($column_name, $post_ID) {
 add_filter('manage_gallery_posts_columns', 'devvn_columns_head');
 add_action('manage_gallery_posts_custom_column', 'devvn_columns_content', 10, 2);
 
+function all_tax_to_class($postID = '', $listTax = array()){
+	if(!$postID || !is_array($listTax) || empty($listTax)) return false;	
+	$outPut = array();
+	foreach ($listTax as $termSlug){
+		$terms = get_the_terms($postID,$termSlug);
+		if($terms){
+			foreach ($terms as $term){
+				$outPut[] = $term->slug;
+			}			
+		}
+	}
+	return array_unique($outPut);	
+}
+
 function devvn_shortcode_gallery_views_func(){
 	wp_enqueue_style( 'gallery-style' );
+	wp_enqueue_script( 'isotope-js' );
 	wp_enqueue_script( 'gallery-script' );
 	ob_start();
 	?>
@@ -356,9 +371,9 @@ function devvn_shortcode_gallery_views_func(){
 				if($company && !is_wp_error($company)):
 				?>
 				<ul class="filter_group" data-filter-group="company">
-					<li class="equalheight"><a href="#" data-filter="" class="selected"><?php _e('All','devvn')?></a></li>
+					<li class="all_company equalheight"><a href="#" data-filter="" class="filter_a selected"><?php _e('All','devvn')?></a></li>
 					<?php foreach ($company as $company):?>
-						<li class="equalheight"><a href="#<?php echo sanitize_html_class($company->slug);?>" data-count="<?php echo $company->count;?>" data-filter=".<?php echo sanitize_html_class($company->slug)?>" title="<?php printf(__('Filter by %s','devvn'),$company->name);?>"><?php echo $company->name?></a></li>
+						<li class="equalheight"><a class="filter_a" href="#<?php echo sanitize_html_class($company->slug);?>" data-count="<?php echo $company->count;?>" data-filter=".<?php echo sanitize_html_class($company->slug)?>" title="<?php printf(__('Filter by %s','devvn'),$company->name);?>"><?php echo $company->name?></a></li>
 					<?php endforeach;?>
 				</ul>
 				<?php endif;//End company?>
@@ -370,8 +385,9 @@ function devvn_shortcode_gallery_views_func(){
 				if($company && !is_wp_error($company)):
 				?>
 				<ul class="filter_group" data-filter-group="country">
+					<li class="all_country equalheight"><a href="#" data-filter="" class="filter_a selected"><?php _e('All','devvn')?></a></li>
 					<?php foreach ($company as $company):?>
-						<li class="equalheight"><a href="#<?php echo sanitize_html_class($company->slug);?>" data-count="<?php echo $company->count;?>" data-filter=".<?php echo sanitize_html_class($company->slug)?>" title="<?php printf(__('Filter by %s','devvn'),$company->name);?>"><?php echo $company->name?></a></li>
+						<li class="equalheight"><a class="filter_a" href="#<?php echo sanitize_html_class($company->slug);?>" data-count="<?php echo $company->count;?>" data-filter=".<?php echo sanitize_html_class($company->slug)?>" title="<?php printf(__('Filter by %s','devvn'),$company->name);?>"><?php echo $company->name?></a></li>
 					<?php endforeach;?>
 				</ul>
 				<?php endif;//End company?>
@@ -381,16 +397,18 @@ function devvn_shortcode_gallery_views_func(){
 			<?php
 			$images = new WP_Query(array(
 				'post_type'			=>	'gallery',
-				'posts_per_page'	=>	2
+				'posts_per_page'	=>	-1
 			));
 			if($images->have_posts()):
 			?>
 			<div class="gallery_filter_container">
+			<div class="gallery_filter_sizer"></div>
 			<?php while ($images->have_posts()):$images->the_post();			
 			$list_title = get_post_meta( get_the_ID(), 'gallery_title_post', true );
 			$list_website = get_post_meta( get_the_ID(), 'gallery_website', true );
+			$all_tax_to_class = all_tax_to_class(get_the_ID(),array('gallery-company','gallery-country'));
 			?>
-				<div class="gallery_filter_item">
+				<div class="gallery_filter_item <?php echo implode(' ',$all_tax_to_class);?>">
 					<?php if(has_post_thumbnail()):?>
 					<div class="gallery_filter_thumbnail">
 					<?php the_post_thumbnail('thumbnail');?>
@@ -429,6 +447,8 @@ add_shortcode('gallery_filter', 'devvn_shortcode_gallery_views_func');
 
 function devvn_gallery_scripts() {
 	wp_register_style( 'gallery-style', esc_url( trailingslashit( get_template_directory_uri() ) . 'gallery-filter/css/gallery-style.css' ),array(), '1.0', 'all' );
+	
+	wp_register_script( 'isotope-js', esc_url( trailingslashit( get_template_directory_uri() ) . 'gallery-filter/js/isotope.pkgd.min.js' ), array( 'jquery' ), '1.0', true );
 	wp_register_script( 'gallery-script', esc_url( trailingslashit( get_template_directory_uri() ) . 'gallery-filter/js/gallery-mainjs.js' ), array( 'jquery' ), '1.0', true );
 	$php_array = array( 
 		'admin_ajax'		=>	admin_url( 'admin-ajax.php'),

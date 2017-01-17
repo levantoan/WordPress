@@ -8,10 +8,20 @@
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
 }
+.gallery_filter_items {
+    overflow: hidden;
+}
+.gallery_filter_container {
+    margin: 0 -15px;
+}
+.gallery_filter_sizer{
+	width: 20%;
+}
 .gallery_filter_item {
     width: 20%;
     float: left;
     overflow: hidden;
+    padding: 0 15px;
 }
 .gallery_filter_container:after {
     content: "";
@@ -48,4 +58,7 @@ ul.filter_group li a:hover {
     background: #e2a207;
     color: #fff;
     text-decoration: none;
+}
+.all_country{
+	display: none !important;
 }
