@@ -277,7 +277,7 @@ function creat_post_by_data($data = array()){
 			if(!empty($category_parent) && is_array($category_parent) && !is_wp_error($category_parent)){
 				$category_child = check_creat_category($manufacturer,$category_parent['term_id']);
 				if(!empty($category_child) && is_array($category_child) && !is_wp_error($category_child)){
-					$TestSignal_cat = check_creat_category_slug($TestSignal,false,'status');
+					$TestSignal_cat = check_creat_category_slug($TestSignal,false,'statut');
 					if(!empty($TestSignal_cat) && is_array($TestSignal_cat) && !is_wp_error($TestSignal_cat)){
 						if(!check_posts_exits(array($category_parent['term_id'],$category_child['term_id'],$type,$DeviceID,$Firmware))){
 							$my_product = array(
@@ -286,7 +286,7 @@ function creat_post_by_data($data = array()){
 								'post_type'		=>	'linux_product',
 								'tax_input' => array( 
 									'category_linux'	=>	array($category_parent['term_id'], $category_child['term_id']), 
-									'status'	=>	array($TestSignal_cat['term_id']) 
+									'statut'	=>	array($TestSignal_cat['term_id']) 
 								)
 							);
 							$product_id = wp_insert_post( $my_product );

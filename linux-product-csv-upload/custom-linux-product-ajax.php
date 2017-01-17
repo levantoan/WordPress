@@ -164,9 +164,7 @@ function linux_product_export_func(){
 							$('.mess_process').prepend(index+' - '+response.data);
 							index++;
 							if(index < maxValue ){
-								setTimeout(function(){
-									ajax_each(index,csv_data);
-								}, 2000);
+								ajax_each(index,csv_data);
 							}else{
 								$('.mess_process').prepend('Finish!<br>');
 								$(window).unbind('beforeunload');
