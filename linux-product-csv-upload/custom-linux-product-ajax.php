@@ -82,7 +82,12 @@ function linux_product_code_export_custom_menu_page() {
 }
 add_action( 'admin_menu', 'linux_product_code_export_custom_menu_page' );
 
+function devvn_stop_heartbeat() {
+	wp_deregister_script('heartbeat');
+}
+
 function linux_product_export_func(){
+	add_action( 'init', 'devvn_stop_heartbeat', 1 );
 	?>
 	<div class="wrap">
 		<h1>Import Linux Product by CSV</h1>
@@ -164,9 +169,7 @@ function linux_product_export_func(){
 							$('.mess_process').prepend(index+' - '+response.data);
 							index++;
 							if(index < maxValue ){
-								setTimeout(function(){
-									ajax_each(index,csv_data);
-								}, 2000);
+								ajax_each(index,csv_data);
 							}else{
 								$('.mess_process').prepend('Finish!<br>');
 								$(window).unbind('beforeunload');
