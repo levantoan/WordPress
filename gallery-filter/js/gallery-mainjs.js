@@ -71,4 +71,42 @@
 			$( this ).addClass('selected');
 		});
 	});
+	$('.gallery_filter_loadmore').on('click','a',function(e){
+		e.preventDefault();
+		var $this = $(this);
+		var pageCurrent = parseInt($this.attr('data-page'));
+		var nonce = $this.data('nonce');
+		var paged = parseInt(pageCurrent+1);
+		console.log(pageCurrent);
+		$.ajax({
+			type : "post",
+			dataType : "json",
+			url : gallery_array.ajaxurl,
+			data : {
+				action: "gallery_load_more",
+				nonce: nonce,
+				page: paged
+			},
+			context: this,
+			beforeSend: function(){
+				$this.html('Loading...');
+			},
+			success: function(response) {
+				if(response.success) {
+					var $newItems = $(response.data.content);
+					$('.gallery_filter_container').append( $newItems ).isotope( 'insert',$newItems);
+					if(response.data.pagemore){
+						$this.attr('data-page',paged).html('Load more');
+					}else{
+						$this.html('No more images to load!');
+						setTimeout(function(){
+							$('.gallery_filter_loadmore').remove();
+						},500);
+					}
+				}else{
+					$this.html('Load more');
+				}
+			}
+		});
+	});
 })(jQuery);

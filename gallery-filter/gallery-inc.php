@@ -1,4 +1,5 @@
 <?php
+define('GALLERY_NUMBER_POSTS_PERPAGE', 3);
 // Register Custom Post Type
 function svl_gallery_func() {
 
@@ -397,44 +398,18 @@ function devvn_shortcode_gallery_views_func(){
 			<?php
 			$images = new WP_Query(array(
 				'post_type'			=>	'gallery',
-				'posts_per_page'	=>	-1
+				'posts_per_page'	=>	GALLERY_NUMBER_POSTS_PERPAGE
 			));
 			if($images->have_posts()):
 			?>
 			<div class="gallery_filter_container">
 			<div class="gallery_filter_sizer"></div>
-			<?php while ($images->have_posts()):$images->the_post();			
-			$list_title = get_post_meta( get_the_ID(), 'gallery_title_post', true );
-			$list_website = get_post_meta( get_the_ID(), 'gallery_website', true );
-			$all_tax_to_class = all_tax_to_class(get_the_ID(),array('gallery-company','gallery-country'));
-			?>
-				<div class="gallery_filter_item <?php echo implode(' ',$all_tax_to_class);?>">
-					<?php if(has_post_thumbnail()):?>
-					<div class="gallery_filter_thumbnail">
-					<?php the_post_thumbnail('thumbnail');?>
-					</div>
-					<?php endif;?>
-					<div class="gallery_filter_infor">
-						<div class="devvn_infor_title">
-						<p><?php the_title();?></p>
-						<?php if(!empty($list_title) && is_array($list_title)){?>
-						<?php foreach ($list_title as $title):?>
-						<p><?php echo $title;?></p>
-						<?php endforeach;?>
-						<?php }?>
-						</div>						
-						<?php if(!empty($list_website) && is_array($list_website)){?>
-						<div class="devvn_infor_website">
-						<?php foreach ($list_website as $web):?>
-						<p><a target="_blank" href="<?php echo (isset($web['link'])?esc_url($web['link']):'')?>"><?php echo (isset($web['title']) && !empty($web['title']))?esc_attr($web['title']):(isset($web['link'])?$web['link']:'');?></a></p>
-						<?php endforeach;?>
-						</div>
-						<?php }?>						
-					</div>
-				</div>
+			<?php while ($images->have_posts()):$images->the_post();?>		
+			<?php include 'content-galleryItem.php';?>
 			<?php endwhile;?>
 			</div>
-			<div class="gallery_filter_loadmore"><a href="#"><?php _e('Load more','devvn');?></a></div>
+			<?php $nonce = wp_create_nonce('gallery_action_nonce');?>
+			<div class="gallery_filter_loadmore"><a href="#" data-page="1" data-nonce="<?php echo $nonce;?>"><?php _e('Load more','devvn');?></a></div>
 			<?php else:?>
 			<div class="no-gallery"><?php _e('No photo to load!');?></div>
 			<?php endif;?>
@@ -451,9 +426,43 @@ function devvn_gallery_scripts() {
 	wp_register_script( 'isotope-js', esc_url( trailingslashit( get_template_directory_uri() ) . 'gallery-filter/js/isotope.pkgd.min.js' ), array( 'jquery' ), '1.0', true );
 	wp_register_script( 'gallery-script', esc_url( trailingslashit( get_template_directory_uri() ) . 'gallery-filter/js/gallery-mainjs.js' ), array( 'jquery' ), '1.0', true );
 	$php_array = array( 
-		'admin_ajax'		=>	admin_url( 'admin-ajax.php'),
-		'home_url'			=>	home_url(),
+		'ajaxurl'	=>	admin_url( 'admin-ajax.php'),
+		'home_url'	=>	home_url(),
 	);
 	wp_localize_script( 'gallery-script', 'gallery_array', $php_array );	
 }
 add_action( 'wp_enqueue_scripts', 'devvn_gallery_scripts', 1 );
+
+add_action( 'wp_ajax_gallery_load_more', 'gallery_load_more_func' );
+add_action( 'wp_ajax_nopriv_gallery_load_more', 'gallery_load_more_func' );
+
+function gallery_load_more_func() {
+	if ( !wp_verify_nonce( $_REQUEST['nonce'], "gallery_action_nonce")) {
+    	wp_send_json_error('Nonce Error');
+   	}
+   	$paged = (isset($_POST['page']))?intval($_POST['page']):1;
+   	$pageMore = true;
+	$images = new WP_Query(array(
+		'post_type'			=>	'gallery',
+		'posts_per_page'	=>	GALLERY_NUMBER_POSTS_PERPAGE,
+		'paged'				=>	$paged
+	));
+	$maxPage = $images->max_num_pages;
+	if($paged >= $maxPage) $pageMore = false;
+   	ob_start();
+	if($images->have_posts()):
+		while ($images->have_posts()):$images->the_post();	
+			include 'content-galleryItem.php';
+		endwhile;
+		
+		$content = ob_get_clean();
+		$result = array(
+			'content'	=>	$content,
+			'pagemore'	=>	$pageMore
+		);
+		wp_send_json_success($result);
+	else:	
+		wp_send_json_error();
+	endif;
+	die();
+}
