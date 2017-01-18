@@ -1,5 +1,5 @@
 <?php
-define('GALLERY_NUMBER_POSTS_PERPAGE', 3);
+define('GALLERY_NUMBER_POSTS_PERPAGE', 50);
 // Register Custom Post Type
 function svl_gallery_func() {
 
@@ -428,6 +428,9 @@ function devvn_gallery_scripts() {
 	$php_array = array( 
 		'ajaxurl'	=>	admin_url( 'admin-ajax.php'),
 		'home_url'	=>	home_url(),
+		'loadmoreText'	=>	__('Load more','devvn'),
+		'loading'	=>	__('Loading ...','devvn'),
+		'noloading'	=>	__('No more images to load!','devvn'),
 	);
 	wp_localize_script( 'gallery-script', 'gallery_array', $php_array );	
 }

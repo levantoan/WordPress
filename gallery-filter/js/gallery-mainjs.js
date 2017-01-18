@@ -71,13 +71,15 @@
 			$( this ).addClass('selected');
 		});
 	});
-	$('.gallery_filter_loadmore').on('click','a',function(e){
+	var loading = false;
+	$('.gallery_filter_loadmore').on('click','a',function(e){		
 		e.preventDefault();
+		if(loading) return false;
+		console.log('a');
 		var $this = $(this);
 		var pageCurrent = parseInt($this.attr('data-page'));
 		var nonce = $this.data('nonce');
 		var paged = parseInt(pageCurrent+1);
-		console.log(pageCurrent);
 		$.ajax({
 			type : "post",
 			dataType : "json",
@@ -89,22 +91,26 @@
 			},
 			context: this,
 			beforeSend: function(){
-				$this.html('Loading...');
+				$this.html(gallery_array.loading);
+				loading = true;
 			},
 			success: function(response) {
 				if(response.success) {
 					var $newItems = $(response.data.content);
 					$('.gallery_filter_container').append( $newItems ).isotope( 'insert',$newItems);
 					if(response.data.pagemore){
-						$this.attr('data-page',paged).html('Load more');
+						$this.attr('data-page',paged).html(gallery_array.loadmoreText);
+						loading = false;
 					}else{
-						$this.html('No more images to load!');
+						$this.html(gallery_array.noloading);
 						setTimeout(function(){
 							$('.gallery_filter_loadmore').remove();
-						},500);
+							loading = false;
+						},1000);
 					}
 				}else{
-					$this.html('Load more');
+					$this.html(gallery_array.loadmoreText);
+					loading = false;
 				}
 			}
 		});
