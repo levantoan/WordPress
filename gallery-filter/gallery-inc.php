@@ -400,6 +400,7 @@ function devvn_shortcode_gallery_views_func(){
 				'post_type'			=>	'gallery',
 				'posts_per_page'	=>	GALLERY_NUMBER_POSTS_PERPAGE
 			));
+			$maxPages = $images->max_num_pages;
 			if($images->have_posts()):
 			?>
 			<div class="gallery_filter_container">
@@ -408,8 +409,12 @@ function devvn_shortcode_gallery_views_func(){
 			<?php include 'content-galleryItem.php';?>
 			<?php endwhile;?>
 			</div>
-			<?php $nonce = wp_create_nonce('gallery_action_nonce');?>
+			<?php 
+			if($maxPages > 1){
+			$nonce = wp_create_nonce('gallery_action_nonce');
+			?>
 			<div class="gallery_filter_loadmore"><a href="#" data-page="1" data-nonce="<?php echo $nonce;?>"><?php _e('Load more','devvn');?></a></div>
+			<?php }?>
 			<?php else:?>
 			<div class="no-gallery"><?php _e('No photo to load!');?></div>
 			<?php endif;?>
