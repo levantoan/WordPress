@@ -1,8 +1,8 @@
 <?php
 function action_download_csv_func(){
-	$ftp_server 	= 	"ftps://194.76.158.251:63421/Export/";
-	$ftp_username	=	'FTPSFINDER';
-	$ftp_userpass	=	'p6aALS9v';
+	$ftp_server 	= 	"ftps://999.76.158.251:9999/Export/";
+	$ftp_username	=	'USER';
+	$ftp_userpass	=	'PASS';
 	
 	$localFile 	=	ABSPATH.'/CSV-Partner/partner.csv';
 	
