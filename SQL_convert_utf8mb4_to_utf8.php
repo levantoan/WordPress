@@ -21,3 +21,16 @@ while($row = mysql_fetch_row($result)) {
 }
 echo 'All the tables have been converted successfully';
 ?>
+<?php
+$dbname = '__YOUR_DATABASE_NAME__';
+mysql_connect('__YOUR_DATABASE_HOSTNAME__', '__YOUR_DATABASE_USER__', '__YOUR_DATABASE_PASS__');
+mysql_query("ALTER DATABASE `$dbname` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
+$result = mysql_query("SHOW TABLES FROM `$dbname`");
+while($row = mysql_fetch_row($result)) {
+	$query = "ALTER TABLE {$dbname}.`{$row[0]}` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci";
+	mysql_query($query);
+	$query = "ALTER TABLE {$dbname}.`{$row[0]}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
+	mysql_query($query);
+}
+echo 'All the tables have been converted successfully';
+?>
