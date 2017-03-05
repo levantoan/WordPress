@@ -26,6 +26,14 @@ UPDATE wp_revslider_slides SET `layers` = replace(`layers`,'http:\\/\\/www.rmgne
 UPDATE wp_revslider_static_slides SET `params` = replace(`params`,'http:\\/\\/rmgnetworks.com','https:\\/\\/www.rmgnetworks.com');
 UPDATE wp_revslider_static_slides SET `layers` = replace(`layers`,'http:\\/\\/rmgnetworks.com','https:\\/\\/www.rmgnetworks.com');
 
+//revo domain to new domain
+UPDATE cwd_revslider_sliders SET `params` = replace(`params`,'dev2.createservers.co.uk\\/swiss','swissjungle.ch');
+UPDATE cwd_revslider_slides SET `params` = replace(`params`,'dev2.createservers.co.uk\\/swiss','swissjungle.ch');
+UPDATE cwd_revslider_slides SET `layers` = replace(`layers`,'dev2.createservers.co.uk\\/swiss','swissjungle.ch');
+UPDATE cwd_revslider_static_slides SET `params` = replace(`params`,'dev2.createservers.co.uk\\/swiss','swissjungle.ch');
+UPDATE cwd_revslider_static_slides SET `layers` = replace(`layers`,'dev2.createservers.co.uk\\/swiss','swissjungle.ch');
+
+
 //Widget
 UPDATE mtp_options SET option_value = replace(option_value, 'old-domain.com', 'new-domain.com') WHERE option_name = 'widget_text' OR option_name = 'recently_edited';
 
