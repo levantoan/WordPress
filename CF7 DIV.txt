@@ -124,7 +124,8 @@
 	background: #363636;
     color: #fff;
 }
-div.wpcf7 img.ajax-loader {
+div.wpcf7 img.ajax-loader,
+div.wpcf7 .ajax-loader {
     position: relative;
     top: 9px;
     left: 10px;
