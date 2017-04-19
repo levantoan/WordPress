@@ -145,7 +145,9 @@ function toancircle_func($atts){
             box-shadow: none;
             transition: all 0.8s ease-in-out, color 0.1s, background 0.1s;
             color: #333333;
-            z-index: 9;
+            z-index: 9;            
+            max-width: inherit;
+            display: block;
         }
         .devvn_selector.open li label {
             width: 100px;
