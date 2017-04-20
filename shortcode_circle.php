@@ -45,22 +45,24 @@ function toancircle_func($atts){
                     <strong><?php echo $text;?></strong>
                 </a>
             </button>
-            <?php if($icon1 || $icon2 || $icon3 || $icon4):?>
+            <?php if($list && is_array($list)):?>
             <ul class="toan_circle_main_list">
                 <?php foreach($list as $icon):
-                $text = (isset($icon[0]))?esc_attr($icon[0]):'';
-                $img = (isset($icon[1]))?esc_url($icon[1]):'';
-                $link = (isset($icon[2]))?esc_url($icon[2]):'';
-                $color = (isset($icon[3]))?esc_url($icon[3]):'#000';
-                ?>
-                <li>
-                    <label>
-                    <a href="<?php echo $link;?>" style="color: <?php echo $color;?>">
-                        <img src="<?php echo $img;?>" class="papa"><br>
-                        <?php echo $text;?>
-                    </a>
-                    </label>
-                </li>
+                    $text = (isset($icon[0]))?esc_attr($icon[0]):'';
+                    $img = (isset($icon[1]))?esc_url($icon[1]):'';
+                    $link = (isset($icon[2]))?esc_url($icon[2]):'';
+                    $color = (isset($icon[3]))?esc_url($icon[3]):'#000';
+                    if($text || $img):
+                    ?>
+                    <li>
+                        <label>
+                        <a href="<?php echo $link;?>" style="color: <?php echo $color;?>">
+                            <img src="<?php echo $img;?>" class="papa"><br>
+                            <?php echo $text;?>
+                        </a>
+                        </label>
+                    </li>
+                    <?php endif;?>
                 <?php endforeach;?>
             </ul>
             <?php endif;?>
@@ -278,8 +280,8 @@ function toancircle_func($atts){
                         var thisTop = $('.devvn_selector_wrap').offset().top;
                         var winHeight = $(window).height();
                         var scrollTop = $(document).scrollTop();
-                        if((scrollTop+winHeight) >= (thisTop+500)){
-                            if (matchMedia('only screen and (min-width: 300px)').matches) {
+                        if((scrollTop+winHeight) >= (thisTop+300)){
+                            if (matchMedia('only screen and (min-width: 500px)').matches) {
                                 toggleOptions('.devvn_selector');
                             }
                         }
