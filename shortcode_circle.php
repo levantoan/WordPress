@@ -124,7 +124,9 @@ function toancircle_func($atts){
             -webkit-transform: rotate(-360deg);
             -moz-transform: rotate(-360deg);
             transform: rotate(-360deg);
-            transition: all 0.8s ease-in-out;
+            transition: all 1.5s ease-in-out;
+            -moz-transition: all 1.5s ease-in-out;
+            -webkit-transition: all 1.5s ease-in-out;
             z-index: 9;
         }
         .devvn_selector li label {
@@ -272,13 +274,22 @@ function toancircle_func($atts){
                             }
                         }
                     }
-                    if (matchMedia('only screen and (min-width: 500px)').matches) {
-                        toggleOptions('.devvn_selector');
-                    }
-                    $(window).resize(function () {
-                        if (matchMedia('only screen and (min-width: 500px)').matches) {
-                            toggleOptions('.devvn_selector');
+                    function toan_load_element(){
+                        var thisTop = $('.devvn_selector_wrap').offset().top;
+                        var winHeight = $(window).height();
+                        var scrollTop = $(document).scrollTop();
+                        if((scrollTop+winHeight) >= (thisTop+500)){
+                            if (matchMedia('only screen and (min-width: 300px)').matches) {
+                                toggleOptions('.devvn_selector');
+                            }
                         }
+                    }
+                    toan_load_element();
+                    $(window).resize(function () {
+                        toan_load_element();
+                    });
+                    $(window).scroll(function () {
+                        toan_load_element();
                     });
                 })
             })
