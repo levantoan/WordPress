@@ -2,6 +2,7 @@
 /*
 Shortcode hiển thị tin tức dạng list
 Author: Lê Văn Toản - http://levantoan.com
+Demo hình ảnh: https://goo.gl/photos/iyW84LdeB2jA6UX56
 *** Các sử dụng:
 [devvn_list_news number_post="" cat=""]
 *** Trong đó
