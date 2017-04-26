@@ -2,6 +2,7 @@
 /*
 Shortcode hiển thị tin tức dạng box. 1 tin to và những tin nhỏ bên cạnh
 Author: Lê Văn Toản - http://levantoan.com
+Demo hình ảnh: https://goo.gl/photos/oc6C3BfaNLrqSTJ56
 *** Các sử dụng:
 [devvn_box_news number_post="" cat=""]
 *** Trong đó
