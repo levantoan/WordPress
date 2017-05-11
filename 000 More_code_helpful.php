@@ -20,3 +20,9 @@ add_action( 'pre_get_posts', 'hwl_home_pagesize', 1 );
 
 //Do filter in ajax
 if (defined( 'DOING_AJAX' ) && DOING_AJAX))
+
+// bật debug cho wordpress 
+define('WP_DEBUG', TRUE);
+ini_set('log_errors',TRUE);
+ini_set('error_reporting', E_ALL);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
