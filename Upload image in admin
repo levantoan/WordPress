@@ -1,15 +1,17 @@
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PHP
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-wp_enqueue_media();	
-
-<div class="svl-upload-image">						
-  <div class="view-has-value">
-    <input type="hidden" class="clone_delete" name="ireel[frames][image_color][]" id="ireel[frames][image_color][]" value=""/>								
-    <img src="" class="image_view pins_img"/>
+<?php
+wp_enqueue_media();
+$imgid = intval($dvls_settings['marker_icon']);
+?>
+<div class="svl-upload-image <?php if($imgid):?>has-image<?php endif;?>">
+<div class="view-has-value">
+    <input type="hidden" class="clone_delete" name="<?php echo $this->_optionName?>[marker_icon]" id="maps_marker_icon" value="<?php echo $imgid;?>"/>
+    <img src="<?php echo wp_get_attachment_image_url($imgid,'full')?>" class="image_view pins_img"/>
     <a href="#" class="svl-delete-image">x</a>
-  </div>
-  <div class="hidden-has-value"><input type="button" class="ireel-upload button" value="<?php _e( 'Select images', 'devvn' )?>" /></div>
+</div>
+<div class="hidden-has-value"><input type="button" class="ireel-upload button" value="<?php _e( 'Select images', 'devvn' )?>" /></div>
 </div>
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 JS
@@ -73,7 +75,7 @@ CSS
 	}
 	
 	.has-image .view-has-value {
-	    display: block;
+	    display: inline-block;
 	}
 	
 	.hidden-has-value {
@@ -87,7 +89,7 @@ CSS
 	a.svl-delete-image {
 	    position: absolute;
 	    top: 0;
-	    right: 0;
+	    right: -25px;
 	    color: #fff;
 	    background: #000;
 	    display: block;
