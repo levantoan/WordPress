@@ -26,3 +26,13 @@ define('WP_DEBUG', TRUE);
 ini_set('log_errors',TRUE);
 ini_set('error_reporting', E_ALL);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+
+$url_thumb = wp_get_attachment_url( get_post_thumbnail_id($post->ID) );
+
+$thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'thumbnail' );
+$url = $thumb['0'];
+
+echo get_the_post_thumbnail($post->ID,'blog_thumnail'); 
+
+echo get_option('page_on_front');
+echo get_option('page_for_posts');
