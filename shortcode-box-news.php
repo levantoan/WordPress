@@ -148,8 +148,8 @@ function devvn_box_news_func($atts){
                     <?php
                     $thumb = 'thumbnail';
                     if($stt == 1) $thumb = 'full';
-                    $thumb = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), $thumb );
-                    $urlThumb = $thumb['0'];
+                    $thumb_img = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), $thumb );
+                    $urlThumb = $thumb_img['0'];
                     ?>
                     <div class="devvn_box_news_box <?php if(has_post_thumbnail()):?>devvn_box_news_has_thumbnail<?php endif;?>">
                         <?php if(has_post_thumbnail()):?>
