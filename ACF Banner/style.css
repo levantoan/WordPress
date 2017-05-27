@@ -1,4 +1,20 @@
-.banner_section {
-    overflow: hidden;
+.banner_section .owl-dots {
+    margin: 0;
+    position: absolute;
+    bottom: 10px;
     width: 100%;
+}
+.banner_section .owl-dot {
+    width: 10px;
+    height: 10px;
+    background: #87ccfa;
+    display: block;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    margin: 0 3px;
+    display: inline-block;
+}
+.banner_section .owl-dot.active {
+    background: #0099ff;
 }
