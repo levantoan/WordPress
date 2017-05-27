@@ -1,3 +1,68 @@
+/*banner*/
+.banner_section {
+    overflow: hidden;
+    width: 100%;
+}
+.none_banner {
+    height: 110px;
+    width: 100%;
+    background: #000;
+}
+.banner_image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.banner_image {
+    min-height: 400px;
+    position: relative;
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    background-size: cover !important;
+    color: #fff;
+}
+.banner_image img {
+    opacity: 0;
+}
+.title_banner h1,
+.title_banner .title_h1_banner{
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-size: 40px;
+    line-height: 50px;
+    text-transform: uppercase;
+    font-weight: 400;
+    display: inline-block;
+    position: relative;
+}
+.title_banner {
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 68px;
+}
+.title_banner h1:before,.title_banner h1:after,
+.title_banner .title_h1_banner:before,.title_banner .title_h1_banner:after
+{
+    content: '';
+    background: #fff;
+    height: 1px;
+    width: 20px;
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+}
+.title_banner h1:before,
+.title_banner .title_h1_banner:before {
+    left: -30px;
+}
+.title_banner h1:after,
+.title_banner .title_h1_banner:after
+{
+    right: -30px;
+}
 .banner_section .owl-dots {
     margin: 0;
     position: absolute;
@@ -18,3 +83,4 @@
 .banner_section .owl-dot.active {
     background: #0099ff;
 }
+/*#banner*/
