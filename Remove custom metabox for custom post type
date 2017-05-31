@@ -1,0 +1,7 @@
+<?php
+//Remove custom metabox for CPT - local-store
+add_action('add_meta_boxes_local-store', devvn_remove_custom_metaboxs, 999);
+function devvn_remove_custom_metaboxs(){
+    remove_meta_box('bawpvc_meta_box', 'local-store', 'side'); // "bawpvc_meta_box" is ID metabox
+    remove_meta_box('mymetabox_revslider_0', 'local-store', 'normal');
+}
