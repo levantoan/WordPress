@@ -87,4 +87,7 @@
 .banner_section .owl-dot.active {
     background: #0099ff;
 }
+.banner_section .owl-theme .owl-dots .owl-dot span {
+    display: none;
+}
 /*#banner*/
