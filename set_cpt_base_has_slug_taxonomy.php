@@ -3,7 +3,7 @@
 Author: levantoan.com
 Set CPT
 'rewrite' = array(
-    'slug'  => 'quotes/%quote_category%'
+    'slug'  => 'san-pham/%danhmuc_sanpham%'
 );
 
 SET Taxonomy
