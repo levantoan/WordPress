@@ -8,53 +8,36 @@ function devvn_SearchFilter($query) {
 }
 add_filter('pre_get_posts','devvn_SearchFilter');
 
-/*Combinations Array*/
-function devvn_getCombinations($base,$n){
+function devvn_array_combinations($array){
 
-    $baselen = count($base);
-    if($baselen == 0){
-        return;
+    $result=[];
+    for ($i=0;$i<count($array)-1;$i++) {
+        $result=array_merge($result, devvn_combinations(array_slice($array,$i)));
     }
-    if($n == 1){
-        $return = array();
-        foreach($base as $b){
-            $return[] = array($b);
-        }
-        return $return;
-    }else{
-        //get one level lower combinations
-        $oneLevelLower = devvn_getCombinations($base,$n-1);
 
-        //for every one level lower combinations add one element to them that the last element of a combination is preceeded by the element which follows it in base array if there is none, does not add
-        $newCombs = array();
-
-        foreach($oneLevelLower as $oll){
-
-            $lastEl = $oll[$n-2];
-            $found = false;
-            foreach($base as  $key => $b){
-                if($b == $lastEl){
-                    $found = true;
-                    continue;
-                    //last element found
-
-                }
-                if($found == true){
-                    //add to combinations with last element
-                    if($key < $baselen){
-
-                        $tmp = $oll;
-                        $newCombination = array_slice($tmp,0);
-                        $newCombination[]=$b;
-                        $newCombs[] = array_slice($newCombination,0);
-                    }
-
-                }
-            }
-        }
-    }
-    return $newCombs;
+    return $result;
 }
+
+function devvn_combinations($array){
+    //get all the possible combinations no dublicates
+    $combinations=[];
+
+    $combinations[]=$array;
+    for($i=1;$i<count($array);$i++){
+        $tmp=$array;
+
+        unset($tmp[$i]);
+        $tmp=array_values($tmp);//fix the indexes after unset
+        if(count($tmp)<2){
+            break;
+        }
+        $combinations[]=$tmp;
+    }
+
+
+    return $combinations;
+}
+
 /*search only post title */
 function __search_by_title_only( $search, $wp_query )
 {
@@ -65,15 +48,16 @@ function __search_by_title_only( $search, $wp_query )
     $q = $wp_query->query_vars;
     $search = '';
     $searchand = '';
-    $strSearch = (isset($q['search_terms']) && !empty($q['search_terms'])) ? (array)$q['search_terms'] : array();
     $str_array = array();
-    for($i = 1; $i<=3 ;$i++){
-        $comb = devvn_getCombinations($strSearch,$i);
-        foreach($comb as $c){
-            $str_array[] = implode(" ",$c);
+    $strSearch = (isset($q['search_terms']) && !empty($q['search_terms'])) ? (array) $q['search_terms'] : array();
+    if(count($strSearch) >= 2){
+        $strSearch = devvn_array_combinations($strSearch);
+        foreach ($strSearch as $str){
+            $str_array[] = implode(" ", $str);
         }
+    }else{
+        $str_array = $strSearch;
     }
-    $str_array = array_reverse($str_array);
     foreach ((array)$str_array as $term) {
         $term = esc_sql($wpdb->esc_like($term));
         $search .= "{$searchand}($wpdb->posts.post_title LIKE '%{$term}%')";
