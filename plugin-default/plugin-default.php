@@ -6,7 +6,7 @@
 * Author: Le Van Toan
 * Author URI: http://levantoan.com
 * Plugin URI: http://levantoan.com
-* Text Domain: devvn
+* Text Domain: devvn-textdefault
 * Domain Path: /languages
 */
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
@@ -53,7 +53,7 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
         }
         public function add_action_links( $links, $file ) {
             if ( strpos( $file, 'plugin-default.php' ) !== false ) {
-                $settings_link = '<a href="' . admin_url( 'options-general.php?page=setting-deefault' ) . '" title="View DevVN Local Store Settings">' . __( 'Settings', 'devvn-localstore' ) . '</a>';
+                $settings_link = '<a href="' . admin_url( 'options-general.php?page=setting-deefault' ) . '" title="'.__('View Settings','devvn-textdefault').'">' . __( 'Settings', 'devvn-textdefault' ) . '</a>';
                 array_unshift( $links, $settings_link );
             }
             return $links;
@@ -83,7 +83,7 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
             }
         }
         function dvls_load_textdomain() {
-            load_plugin_textdomain( 'plugin-default', FALSE, basename( dirname( __FILE__ ) ) . '/languages' );
+            load_textdomain('devvn-textdefault', dirname(__FILE__) . '/languages/devvn-textdefault-' . get_locale() . '.mo');
         }
         function get_dvlsoptions(){
             return wp_parse_args(get_option($this->_optionName),$this->_defaultOptions);
@@ -91,8 +91,8 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
 
         function admin_menu() {
             add_options_page(
-                __('Setting Default','devvn'),
-                __('Setting Default','devvn'),
+                __('Setting Default','devvn-textdefault'),
+                __('Setting Default','devvn-textdefault'),
                 'manage_options',
                 'setting-deefault',
                 array(
