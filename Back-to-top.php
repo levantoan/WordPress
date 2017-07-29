@@ -5,18 +5,18 @@ Insert to functions.php
 function back_to_top(){
 	ob_start();
 	?>
-	<a title="Lên đầu trang" href="#" class="scrollTo_top"><i class="fa fa-arrow-up"></i></a>
+	<a title="<?php _e('Lên đầu trang','devvn');?>" href="#" class="scrollTo_top"><i class="fa fa-arrow-up"></i></a>
 	<style>
 	.scrollTo_top{
 		position: fixed;
-		bottom: 96px;
+		bottom: 50px;
 		right: 10px;
 		display: block;
 		width: 30px;
 		height: 30px;
 		line-height: 30px;
 		text-align: center;
-		background: #015f95;
+		background: #4f1c78;
 		color: #fff;
 		text-decoration: none;	
 		display: none;
