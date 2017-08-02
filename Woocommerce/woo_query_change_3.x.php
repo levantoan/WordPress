@@ -1,7 +1,7 @@
 /*
 Query woocommerce changed 3.x
 **********
-old
+old featured_product
 **********
 'meta_query' => array(
   array(
@@ -10,7 +10,7 @@ old
   )
 ),
 **********
-new
+new featured_product
 **********
 'tax_query' =>  array(
   array(
@@ -21,7 +21,7 @@ new
   )
 )
 **********
-old
+old category visibility
 **********
 $args['meta_query'][] = array(
     'key' => '_visibility',
@@ -29,7 +29,7 @@ $args['meta_query'][] = array(
     'compare' => 'IN'
 );
 **********
-new
+new category visibility
 **********
 'tax_query' =>  array(
     array(
