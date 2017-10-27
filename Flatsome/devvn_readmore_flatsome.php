@@ -9,12 +9,19 @@ function devvn_readmore_flatsome(){
     <style>
         .single-product div#tab-description {
             overflow: hidden;
+            position: relative;
+        }
+        .single-product .tab-panels div#tab-description.panel:not(.active) {
+            height: 0 !important;
         }
         .devvn_readmore_flatsome {
             text-align: center;
             cursor: pointer;
-            position: relative;
-            z-index: 10;
+            position: absolute;
+            z-index: 9999;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
         }
         .devvn_readmore_flatsome:before {
             height: 55px;
@@ -45,15 +52,15 @@ function devvn_readmore_flatsome(){
                     if($('.single-product div#tab-description').length > 0){
                         var wrap = $('.single-product div#tab-description');
                         var current_height = wrap.height();
-                        var your_height = 450;
+                        var your_height = 500;
                         if(current_height > your_height){
                             wrap.css('height', your_height+'px');
-                            wrap.after(function(){
+                            wrap.append(function(){
                                 return '<div class="devvn_readmore_flatsome"><a title="Xem thêm" href="javascript:void(0);">Xem thêm</a></div>';
                             });
                             $('body').on('click','.devvn_readmore_flatsome', function(){
                                 wrap.removeAttr('style');
-                                $('.devvn_readmore_flatsome').remove();
+                                $('body .devvn_readmore_flatsome').remove();
                             });
                         }
                     }
