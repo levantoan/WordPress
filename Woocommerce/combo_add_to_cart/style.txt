@@ -1,0 +1,8 @@
+.item-bestseller {
+    margin: 0;
+    background: url(../images/ic-prize@2x.png) top 0px left no-repeat;
+    background-size: 18px;
+    padding: 0 0 0 25px;
+    line-height: 19px;
+    font-size: 13px;
+}
