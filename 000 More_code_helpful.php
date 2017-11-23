@@ -20,12 +20,19 @@ add_action( 'pre_get_posts', 'hwl_home_pagesize', 1 );
 
 //Do filter in ajax
 if (defined( 'DOING_AJAX' ) && DOING_AJAX))
-
+    
+/******************************************************************/
 // bật debug cho wordpress 
-define('WP_DEBUG', TRUE);
-ini_set('log_errors',TRUE);
-ini_set('error_reporting', E_ALL);
-ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+$check_local = $_SERVER['SERVER_NAME'];
+if($check_local && $check_local == 'shop-devvn.local') {
+    define('WP_DEBUG', true);
+    ini_set('log_errors', TRUE);
+    ini_set('error_reporting', E_ALL);
+    ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+}else{
+    define('WP_DEBUG', false);
+}
+/******************************************************************/
 
 $url_thumb = wp_get_attachment_url( get_post_thumbnail_id($post->ID) );
 
