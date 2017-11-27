@@ -1,0 +1,42 @@
+/*
+Insert this css to your css file
+Author: http://levantoan.com
+*/
+body #powerTip {
+    background-color: #fff;
+}
+body #powerTip.n:before {
+    border-top: 10px solid rgb(255, 252, 252);
+}
+body #powerTip.s:before {
+    border-bottom: 10px solid #fff;
+}
+body #powerTip.e:before {
+    border-right: 10px solid #fff;
+}
+body #powerTip.w:before {
+    border-left: 10px solid #fff;
+    right: -10px
+}
+body #powerTip.ne:before,body #powerTip.nw:before {
+    border-top: 10px solid #fff;
+    border-top: 10px solid rgba(255,255,255,1);
+}
+body #powerTip.se:before,body #powerTip.sw:before {
+    border-bottom: 10px solid #fff;
+    border-bottom: 10px solid rgba(255,255,255,1);
+}
+body #powerTip.nw-alt:before,body #powerTip.ne-alt:before,body #powerTip.sw-alt:before,body #powerTip.se-alt:before {
+    border-top: 10px solid #fff;
+    border-top: 10px solid rgba(255,255,255,1);
+}
+body #powerTip.sw-alt:before,body #powerTip.se-alt:before {
+    border-bottom: 10px solid #fff;
+    border-bottom: 10px solid rgba(255,255,255,1);
+}
+body .box_view_html {
+    color: #000;
+}
+body .box_view_html span.close_ihp svg {
+    fill: #000;
+}
