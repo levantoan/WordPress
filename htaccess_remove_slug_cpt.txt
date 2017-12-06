@@ -1,0 +1,1 @@
+RewriteRule ^blocks/(.+)/\$ /\$1 [R=301,L]
