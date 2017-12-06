@@ -1,3 +1,5 @@
+RewriteRule ^job/(.+?)(-[0-9]+)?$ /$1 [L,R=301]
+
 RewriteRule ^blocks/(.+)/\$ /\$1 [R=301,L]
 
 # BEGIN REMOVE SLUG CUSTOM POST TYPE RULES
