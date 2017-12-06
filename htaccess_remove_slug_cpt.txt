@@ -1,1 +1,17 @@
 RewriteRule ^blocks/(.+)/\$ /\$1 [R=301,L]
+
+# BEGIN REMOVE SLUG CUSTOM POST TYPE RULES
+RewriteRule ^blocks/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^jmfe_custom_fields/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^resume/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^job_listing/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^product/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^product_variation/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^shop_order_refund/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^featured_item/(.+)/\$ /\$1 [R=301,L]
+RewriteRule ^sidebar/(.+)/\$ /\$1 [R=301,L]
+# END REMOVE SLUG CUSTOM POST TYPE RULES
