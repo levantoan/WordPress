@@ -211,6 +211,17 @@ class DevVN_Edit_Order_style {
                 table.wp-list-table .column-devvn_details{
                     width: 65px;
                 }
+                .post-type-shop_order table.wp-list-table.widefat {
+                    border-collapse: collapse;
+                }
+                .post-type-shop_order table.wp-list-table.widefat .type-shop_order td,
+                .post-type-shop_order table.wp-list-table.widefat th {
+                    vertical-align: middle;
+                    border: 1px solid #e5e5e5 !important;
+                }
+                .post-type-shop_order table.wp-list-table.widefat th{
+                    vertical-align: top;
+                }
             </style>
             <script type="text/javascript">
                 (function($){
