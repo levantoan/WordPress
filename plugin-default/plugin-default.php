@@ -16,6 +16,9 @@ tragop-options-group
 devvn-textdefault
 _DF_
 dvls_settings
+plugin-default.php
+setting-default
+Setting Default
 */
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 if ( !class_exists( 'Plugin_Default_Class' ) ) {
@@ -38,8 +41,8 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
         public function __construct()
         {
             $this->define_constants();
-            global $tragop_settings;
-            $tragop_settings  = $this->get_dvlsoptions();
+            global $dvls_settings;
+            $dvls_settings  = $this->get_dvlsoptions();
 
             add_action( 'plugins_loaded', array($this,'dvls_load_textdomain') );
             add_action( 'wp_enqueue_scripts', array($this, 'load_plugins_scripts') );
@@ -61,7 +64,7 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
         }
         public function add_action_links( $links, $file ) {
             if ( strpos( $file, 'plugin-default.php' ) !== false ) {
-                $settings_link = '<a href="' . admin_url( 'options-general.php?page=setting-deefault' ) . '" title="'.__('View Settings','devvn-textdefault').'">' . __( 'Settings', 'devvn-textdefault' ) . '</a>';
+                $settings_link = '<a href="' . admin_url( 'options-general.php?page=setting-default' ) . '" title="'.__('View Settings','devvn-textdefault').'">' . __( 'Settings', 'devvn-textdefault' ) . '</a>';
                 array_unshift( $links, $settings_link );
             }
             return $links;
@@ -102,7 +105,7 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
                 __('Setting Default','devvn-textdefault'),
                 __('Setting Default','devvn-textdefault'),
                 'manage_options',
-                'setting-deefault',
+                'setting-default',
                 array(
                     $this,
                     'devvn_settings_page'
@@ -115,7 +118,7 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
         }
 
         function  devvn_settings_page() {
-            global $tragop_settings;
+            global $dvls_settings;
             ?>
             <div class="wrap">
                 <h1>Cài đặt trả góp</h1>
@@ -130,7 +133,7 @@ if ( !class_exists( 'Plugin_Default_Class' ) ) {
                                 $settings = array(
                                     'textarea_name' => $this->_optionName.'[luu_y]',
                                 );
-                                wp_editor( $tragop_settings['luu_y'], 'luu_y', $settings );?>
+                                wp_editor( $dvls_settings['luu_y'], 'luu_y', $settings );?>
                             </td>
                         </tr>
                         <?php do_settings_fields('tragop-options-group', 'default'); ?>
