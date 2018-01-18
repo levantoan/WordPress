@@ -8,6 +8,14 @@
 * Plugin URI: http://levantoan.com
 * Text Domain: devvn-textdefault
 * Domain Path: /languages
+
+==Change to edit default==
+Plugin_Default_Class
+tragop_options
+tragop-options-group
+devvn-textdefault
+_DF_
+dvls_settings
 */
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 if ( !class_exists( 'Plugin_Default_Class' ) ) {
