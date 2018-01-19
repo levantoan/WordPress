@@ -101,9 +101,11 @@ class DevVN_Edit_Order_style {
                 if ( $the_order->get_billing_phone() ) {
                     echo esc_html( $the_order->get_billing_phone() ) . '<br>';
                 }
+                add_filter('woocommerce_order_formatted_shipping_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
                 if ( $address = $the_order->get_formatted_shipping_address() ) {
                     echo esc_html( preg_replace( '#<br\s*/?>#i', ', ', $address ) ) . '<br>';
                 }
+                remove_filter('woocommerce_order_formatted_shipping_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
                 if ( $the_order->get_billing_email() ) {
                     echo esc_html( $the_order->get_billing_email() ) . '<br>';
                 }
@@ -175,6 +177,11 @@ class DevVN_Edit_Order_style {
     }
     function devvn_woocommerce_admin_order_date_format(){
         return 'h:i d/m/Y';
+    }
+    function devvn_woocommerce_formatted_address_replacements($address){
+        unset($address['first_name']);
+        unset($address['last_name']);
+        return $address;
     }
     function devvn_order_style() {
         $current_screen = get_current_screen();
