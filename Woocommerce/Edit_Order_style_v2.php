@@ -101,7 +101,7 @@ class DevVN_Edit_Order_style {
                 if ( $the_order->get_billing_phone() ) {
                     echo esc_html( $the_order->get_billing_phone() ) . '<br>';
                 }
-                if ( $address = $the_order->get_shipping_address_1() ) {
+                if ( $address = $the_order->get_formatted_shipping_address() ) {
                     echo esc_html( preg_replace( '#<br\s*/?>#i', ', ', $address ) ) . '<br>';
                 }
                 if ( $the_order->get_billing_email() ) {
