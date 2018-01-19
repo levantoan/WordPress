@@ -1,14 +1,13 @@
-<?php
 /*
  * Edit order style
  * Author: www.levantoan.com
  * */
-
 class DevVN_Edit_Order_style {
     private $stt = 1;
     function __construct(){
         add_filter( 'manage_shop_order_posts_columns', array($this, 'devvn_shop_order_columns'), 20 );
         add_action( 'manage_shop_order_posts_custom_column', array($this, 'devvn_render_shop_order_columns') , 20 );
+        add_filter( 'manage_edit-shop_order_sortable_columns', array( $this, 'shop_order_sortable_columns' ) );
         add_filter('woocommerce_admin_order_date_format', array($this, 'devvn_woocommerce_admin_order_date_format') );
         add_action('admin_head', array($this, 'devvn_order_style') );
         add_filter( 'post_row_actions', array($this, 'devvn_page_row_actions'), 999, 2 );
@@ -29,15 +28,22 @@ class DevVN_Edit_Order_style {
         unset($posts_columns['order_notes']);
         unset($posts_columns['order_date']);
         unset($posts_columns['order_actions']);
+        unset($posts_columns['order_total']);
         $posts_columns = $this->devvn_array_insert_before('cb', $posts_columns, 'devvn_stt', 'STT');
         $posts_columns = $this->devvn_array_insert_after('cb', $posts_columns, 'devvn_order_title', 'Thông tin');
         $posts_columns = $this->devvn_array_insert_after('devvn_order_title', $posts_columns, 'devvn_details', 'Chi tiết');
+        $posts_columns['devvn_total'] = 'Tổng cộng';
         $posts_columns['order_date'] = 'Ngày đặt hàng';
         $posts_columns['devvn_message'] = 'Ghi chú';
         $posts_columns['devvn_order_status'] = 'Trạng thái';
         $posts_columns['devvn_actions'] = '';
-
         return $posts_columns;
+    }
+    public function shop_order_sortable_columns( $columns ) {
+        $custom = array(
+            'devvn_total' => 'order_total',
+        );
+        return wp_parse_args( $custom, $columns );
     }
     function devvn_array_insert_before($key, array &$array, $new_key, $new_value) {
         if (array_key_exists($key, $array)) {
@@ -85,35 +91,31 @@ class DevVN_Edit_Order_style {
                 } else {
                     $username = __( 'Guest', 'woocommerce' );
                 }
-
                 /* translators: 1: order and number (i.e. Order #13) 2: user name */
                 printf(
                     __( '%1$s <br> %2$s<br>', 'woocommerce' ),
                     'ID: <a href="' . admin_url( 'post.php?post=' . absint( $post->ID ) . '&action=edit' ) . '" class="row-title"><strong>#' . esc_attr( $the_order->get_order_number() ) . '</strong></a>',
                     $username
                 );
-
-                if ( $the_order->get_billing_email() ) {
-                    echo esc_html( $the_order->get_billing_email() ) . '<br>';
-                }
-
-                if ( $address = $the_order->get_shipping_address_1() ) {
-                    echo esc_html( preg_replace( '#<br\s*/?>#i', ', ', $address ) ) . '<br>';
-                }
-
                 if ( $the_order->get_billing_phone() ) {
                     echo esc_html( $the_order->get_billing_phone() ) . '<br>';
                 }
-
+                if ( $address = $the_order->get_shipping_address_1() ) {
+                    echo esc_html( preg_replace( '#<br\s*/?>#i', ', ', $address ) ) . '<br>';
+                }
+                if ( $the_order->get_billing_email() ) {
+                    echo esc_html( $the_order->get_billing_email() ) . '<br>';
+                }
                 if ( $the_order->get_shipping_method() ) {
                     echo '<small class="meta">' . __( 'Via', 'woocommerce' ) . ' ' . esc_html( $the_order->get_shipping_method() ) . '</small>';
                 }
-
                 echo '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details', 'woocommerce' ) . '</span></button>';
-
                 break;
             case "devvn_details":
                 echo '<a href="' . admin_url( 'post.php?post=' . absint( $post->ID ) . '&action=edit' ) . '">Chi tiết</a>';
+                break;
+            case "devvn_total":
+                echo $the_order->get_formatted_order_total();
                 break;
             case "devvn_stt":
                 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
@@ -142,18 +144,14 @@ class DevVN_Edit_Order_style {
                 break;
             case "devvn_notes":
                 if ( $post->comment_count ) {
-
                     $latest_notes = wc_get_order_notes( array(
                         'order_id' => $post->ID,
                         //'limit'    => '10',
                         'orderby'  => 'date_created_gmt',
                         'type'  => 'customer'
                     ) );
-
                     $latest_note = current( $latest_notes );
-
                     $count_note = count($latest_notes);
-
                     if ( isset( $latest_note->content ) ) {
                         echo '<span class="note-on tips" data-tip="' . wc_sanitize_tooltip( $latest_note->content ) . '">' . sprintf( '%d tin nhắn', $count_note ) . '</span>';
                     } else {
@@ -184,6 +182,9 @@ class DevVN_Edit_Order_style {
             <style>
                 .widefat .type-shop_order td {
                     vertical-align: middle;
+                }
+                table.wp-list-table .column-devvn_total {
+                    width: 103px !important;
                 }
                 table.wp-list-table .column-customer_message,
                 table.wp-list-table .column-devvn_message {
