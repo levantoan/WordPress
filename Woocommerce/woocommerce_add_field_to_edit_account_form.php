@@ -2,6 +2,7 @@
 
 /*
 * Author by levantoan.com
+* Add to functions.php
 */
 
 add_action('woocommerce_edit_account_form','devvn_woocommerce_edit_account_form');
