@@ -1,8 +1,9 @@
 <?php
 
-/*
+/* Add field to edit account form
 * Author by levantoan.com
 * Add to functions.php
+* Change "khu_vuc" at line 16 and 37 to your name field
 */
 
 add_action('woocommerce_edit_account_form','devvn_woocommerce_edit_account_form');
