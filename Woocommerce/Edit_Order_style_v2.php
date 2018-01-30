@@ -101,11 +101,20 @@ class DevVN_Edit_Order_style {
                 if ( $the_order->get_billing_phone() ) {
                     echo esc_html( $the_order->get_billing_phone() ) . '<br>';
                 }
+                
                 add_filter('woocommerce_order_formatted_shipping_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
-                if ( $address = $the_order->get_formatted_shipping_address() ) {
+                add_filter('woocommerce_order_formatted_billing_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
+                if ( ! wc_ship_to_billing_address_only() && $the_order->needs_shipping_address() ) :
+                    $address = $the_order->get_formatted_shipping_address();
+                else:
+                    $address = $the_order->get_formatted_billing_address();
+                endif;
+                if ( $address ) {
                     echo esc_html( preg_replace( '#<br\s*/?>#i', ', ', $address ) ) . '<br>';
                 }
+                remove_filter('woocommerce_order_formatted_billing_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
                 remove_filter('woocommerce_order_formatted_shipping_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
+                
                 if ( $the_order->get_billing_email() ) {
                     echo esc_html( $the_order->get_billing_email() ) . '<br>';
                 }
