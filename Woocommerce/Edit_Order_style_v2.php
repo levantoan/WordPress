@@ -3,12 +3,12 @@
  * Edit order style
  * Author: www.levantoan.com
  * */
+
 class DevVN_Edit_Order_style {
     private $stt = 1;
     function __construct(){
         add_filter( 'manage_shop_order_posts_columns', array($this, 'devvn_shop_order_columns'), 20 );
         add_action( 'manage_shop_order_posts_custom_column', array($this, 'devvn_render_shop_order_columns') , 20 );
-        add_filter( 'manage_edit-shop_order_sortable_columns', array( $this, 'shop_order_sortable_columns' ) );
         add_filter('woocommerce_admin_order_date_format', array($this, 'devvn_woocommerce_admin_order_date_format') );
         add_action('admin_head', array($this, 'devvn_order_style') );
         add_filter( 'post_row_actions', array($this, 'devvn_page_row_actions'), 999, 2 );
@@ -29,22 +29,16 @@ class DevVN_Edit_Order_style {
         unset($posts_columns['order_notes']);
         unset($posts_columns['order_date']);
         unset($posts_columns['order_actions']);
-        unset($posts_columns['order_total']);
-        $posts_columns = $this->devvn_array_insert_before('cb', $posts_columns, 'devvn_stt', 'STT');
+        unset($posts_columns['order_number']);
         $posts_columns = $this->devvn_array_insert_after('cb', $posts_columns, 'devvn_order_title', 'Thông tin');
         $posts_columns = $this->devvn_array_insert_after('devvn_order_title', $posts_columns, 'devvn_details', 'Chi tiết');
-        $posts_columns['devvn_total'] = 'Tổng cộng';
+        //$posts_columns = $this->devvn_array_insert_before('cb', $posts_columns, 'devvn_stt', 'STT');
         $posts_columns['order_date'] = 'Ngày đặt hàng';
         $posts_columns['devvn_message'] = 'Ghi chú';
         $posts_columns['devvn_order_status'] = 'Trạng thái';
         $posts_columns['devvn_actions'] = '';
+
         return $posts_columns;
-    }
-    public function shop_order_sortable_columns( $columns ) {
-        $custom = array(
-            'devvn_total' => 'order_total',
-        );
-        return wp_parse_args( $custom, $columns );
     }
     function devvn_array_insert_before($key, array &$array, $new_key, $new_value) {
         if (array_key_exists($key, $array)) {
@@ -98,10 +92,14 @@ class DevVN_Edit_Order_style {
                     'ID: <a href="' . admin_url( 'post.php?post=' . absint( $post->ID ) . '&action=edit' ) . '" class="row-title"><strong>#' . esc_attr( $the_order->get_order_number() ) . '</strong></a>',
                     $username
                 );
-                if ( $the_order->get_billing_phone() ) {
+
+                $shipping_phone = get_post_meta( $post->ID, '_shipping_phone', true );
+                if ( ! wc_ship_to_billing_address_only() && $the_order->needs_shipping_address() && $shipping_phone) {
+                    echo esc_html( $shipping_phone ) . '<br>';
+                }elseif ( $the_order->get_billing_phone() ) {
                     echo esc_html( $the_order->get_billing_phone() ) . '<br>';
                 }
-                
+
                 add_filter('woocommerce_order_formatted_shipping_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
                 add_filter('woocommerce_order_formatted_billing_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
                 if ( ! wc_ship_to_billing_address_only() && $the_order->needs_shipping_address() ) :
@@ -114,7 +112,7 @@ class DevVN_Edit_Order_style {
                 }
                 remove_filter('woocommerce_order_formatted_billing_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
                 remove_filter('woocommerce_order_formatted_shipping_address', array($this, 'devvn_woocommerce_formatted_address_replacements'), 10);
-                
+
                 if ( $the_order->get_billing_email() ) {
                     echo esc_html( $the_order->get_billing_email() ) . '<br>';
                 }
@@ -197,21 +195,40 @@ class DevVN_Edit_Order_style {
         if(isset($current_screen->post_type) && $current_screen->post_type == 'shop_order' && $current_screen->base == 'edit'):
             ?>
             <style>
+                .post-type-shop_order .wp-list-table td, .post-type-shop_order .wp-list-table th {
+                    width: inherit;
+                }
+                .post-type-shop_order .wp-list-table tbody td, .post-type-shop_order .wp-list-table tbody th {
+                    padding: 5px;
+                    line-height: 18px;
+                }
+                .post-type-shop_order .wp-list-table .check-column {
+                    padding: 3px !important;
+                    width: 23px;
+                    text-align: center;
+                }
+                .post-type-shop_order .wp-list-table .check-column input[type="checkbox"] {
+                    margin: 0;
+                }
+                table.wp-list-table .column-devvn_order_status span.select2 {
+                    margin-bottom: 10px;
+                }
                 .widefat .type-shop_order td {
                     vertical-align: middle;
                 }
-                table.wp-list-table .column-devvn_total {
-                    width: 103px !important;
+                table.wp-list-table .column-customer_message, table.wp-list-table .column-devvn_message {
+                    width: 60px;
+                    padding: 5px !important;
+                    text-align: center;
                 }
-                table.wp-list-table .column-customer_message,
-                table.wp-list-table .column-devvn_message {
-                    width: 70px;
-                }
+
                 table.wp-list-table .column-order_date {
                     width: 145px;
                 }
                 table.wp-list-table .column-devvn_order_status {
-                    width: 145px;
+                    width: 155px;
+                    padding: 5px !important;
+                    text-align: center;
                 }
                 .widefat .column-devvn_actions a.button {
                     float: left;
@@ -253,8 +270,10 @@ class DevVN_Edit_Order_style {
                     content: "\f182";
                 }
                 table.wp-list-table .column-devvn_actions,
-                table.wp-list-table .column-devvn_details{
+                table.wp-list-table .column-devvn_details {
                     width: 65px;
+                    padding: 5px !important;
+                    text-align: center;
                 }
                 .post-type-shop_order table.wp-list-table.widefat {
                     border-collapse: collapse;
@@ -269,6 +288,19 @@ class DevVN_Edit_Order_style {
                     text-align: center;
                     padding-left: 2px;
                     padding-right: 2px;
+                }
+                .post-type-shop_order .wp-list-table .column-order_total {
+                    width: 105px;
+                    padding: 5px !important;
+                    text-align: center;
+                }
+                .post-type-shop_order .wp-list-table .column-order_date, .post-type-shop_order .wp-list-table .column-order_status {
+                    width: 127px !important;
+                    text-align: center;
+                    padding: 5px !important;
+                }
+                .tablenav .alignleft.actions.bulkactions select {
+                    max-width: 100px;
                 }
             </style>
             <script type="text/javascript">
