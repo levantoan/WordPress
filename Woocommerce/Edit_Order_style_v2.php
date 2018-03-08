@@ -22,6 +22,7 @@ class DevVN_Edit_Order_style {
     }
     function devvn_shop_order_columns($posts_columns){
         unset($posts_columns['order_status']);
+        unset($posts_columns['wc_actions']);
         unset($posts_columns['order_title']);
         unset($posts_columns['billing_address']);
         unset($posts_columns['shipping_address']);
