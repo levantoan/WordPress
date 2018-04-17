@@ -1,0 +1,83 @@
+<?php wp_nonce_field('charity_nonce_action','charity_nonce');?>
+$nonce = wp_create_nonce("my_user_vote_nonce");
+/////////////////////////////////////////// Function
+//Ajax load post
+
+add_action( 'init', 'my_script_enqueuer' );
+
+function my_script_enqueuer() {
+   wp_register_script( "ajax_load_post", TEMP_URL.'/js/ajax.js', array('jquery') );
+   wp_localize_script( 'ajax_load_post', 'onego', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));        
+
+   wp_enqueue_script( 'jquery' );
+   wp_enqueue_script( 'ajax_load_post' );
+
+}
+
+add_action( 'wp_ajax_ajax_load_post', 'ajax_load_post' );
+add_action( 'wp_ajax_nopriv_ajax_load_post', 'ajax_load_post' );
+
+function ajax_load_post() {
+if ( !wp_verify_nonce( $_REQUEST['nonce'], "my_user_vote_nonce")) {
+      exit("No naughty business please");
+   }   
+	die( "Hello World" );
+}
+
+///////////////////////////////////// Jquery
+$(".viewmore a").click(function(){
+		$.ajax({
+			type : "post",
+			dataType : "json",
+			url : onego.ajaxurl,
+			data : {action: "my_user_vote", post_id : post_id, nonce: nonce},
+			context: this,
+			beforeSend: function(){
+
+			},
+			success: function(response) {
+				if(response.type == "success") {
+					jQuery("#vote_counter").html(response.vote_count);
+				}
+				else {
+				   alert("Your vote could not be added");
+				}
+			}
+		})   
+		return false;
+	});
+
+////////////////////////////////////////////////Function
+$result['type'] = "success";
+$result['post'] = $list_post;
+wp_reset_query(); wp_reset_postdata();
+echo json_encode($result);
+
+//js var formvalue = form.serialize();
+parse_str($_POST['data'], $params);	
+
+
+
+API
+
+add_action( 'wp_ajax_edmunds_api', 'edmunds_api_func' );
+add_action( 'wp_ajax_nopriv_edmunds_api', 'edmunds_api_func' );
+
+function edmunds_api_func() {
+	if(false == ($edmunds_data = get_transient('edmunds_data'))){
+		$request  = wp_remote_get(
+			'https://api.edmunds.com/api/vehicle/v2/makes?fmt=json&api_key=5pjefxbfmkd2gt7gpdgevwpf',
+			array( 
+				'timeout' => 120, 
+				'httpversion' => '1.1' 
+			)
+		);
+		$edmunds_data = wp_remote_retrieve_body( $request );
+		if ('OK' == wp_remote_retrieve_response_message( $request )OR 200 == wp_remote_retrieve_response_code( $request )){			
+			set_transient('edmunds_data', $edmunds_data,'60*60*24*7');
+		}
+	}
+	//print_r($edmunds_data);
+	echo json_encode($edmunds_data);
+	die();
+}
