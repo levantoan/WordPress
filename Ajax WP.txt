@@ -66,7 +66,7 @@ add_action( 'wp_ajax_nopriv_edmunds_api', 'edmunds_api_func' );
 function edmunds_api_func() {
 	if(false == ($edmunds_data = get_transient('edmunds_data'))){
 		$request  = wp_remote_get(
-			'https://api.edmunds.com/api/vehicle/v2/makes?fmt=json&api_key=5pjefxbfmkd2gt7gpdgevwpf',
+			'https://api.edmunds.com/api/vehicle/v2/makes?fmt=json&api_key=xxxxxx',
 			array( 
 				'timeout' => 120, 
 				'httpversion' => '1.1' 
