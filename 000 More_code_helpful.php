@@ -43,3 +43,16 @@ echo get_the_post_thumbnail($post->ID,'blog_thumnail');
 
 echo get_option('page_on_front');
 echo get_option('page_for_posts');
+
+//check reffer
+function devvn_baogia_check_your_site(){
+    $your_origin = isset($_SERVER['HTTP_ORIGIN']) ? parse_url(esc_url($_SERVER['HTTP_ORIGIN']), PHP_URL_HOST) : '';
+    if(!$your_origin) {
+        $your_origin = isset($_SERVER['HTTP_REFERER']) ? parse_url(esc_url($_SERVER['HTTP_REFERER']), PHP_URL_HOST) : '';
+    }
+    $home_url = parse_url(home_url(), PHP_URL_HOST);
+    if ( $your_origin != $home_url ) {
+        return false;
+    }
+    return true;
+}
