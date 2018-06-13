@@ -1,74 +1,123 @@
 <?php
 /**
- * Plugin Name: WooCommerce Settings Tab
+ * Plugin Name: DevVN Shipping Discount
  * Plugin URI: http://www.wordpress.org
  * Description: Woocmmerce settings tab.
- * Author: Author Name
- * Author URI: http://www.wordpress.org
- * Version: 1.0
+ * Author: Le Van Toan
+ * Author URI: http://levantoan.com
+ * Text Domain: devvn-shippingdiscount
+ * Domain Path: /languages
+ * WC requires at least: 3.0.0
+ * WC tested up to: 3.4.2
  *
  */
 
-class DevVN_Discount_Shipping_Class {
-    public static function init() {
-        add_filter( 'woocommerce_settings_tabs_array', __CLASS__ . '::add_settings_tab', 50 );
-        add_action( 'woocommerce_settings_tabs_settings_tab_demo', __CLASS__ . '::settings_tab' );
-        add_action( 'woocommerce_update_options_settings_tab_demo', __CLASS__ . '::update_settings' );
-        add_action( 'woocommerce_sections',__CLASS__ . '::get_sections');
+class DevVN_Shipping_Discount_Class {
+
+
+    protected $id = 'shipping_discount_tab';
+
+    public function __construct() {
+        add_filter( 'woocommerce_settings_tabs_array', array($this, 'add_settings_tab'), 50 );
+        add_action( 'woocommerce_settings_tabs_' . $this->id , array($this, 'settings_tab') );
+        add_action( 'woocommerce_update_options_' . $this->id, array($this, 'update_settings') );
+        add_action( 'woocommerce_sections_' . $this->id, array($this, 'output_sections') );
     }
 
-    public static function add_settings_tab( $settings_tabs ) {
-        $settings_tabs['settings_tab_demo'] = __( 'Settings Demo Tab', 'woocommerce-settings-tab-demo' );
+    public function add_settings_tab( $settings_tabs ) {
+        $settings_tabs['shipping_discount_tab'] = __( 'Shipping Discount', 'devvn-shippingdiscount' );
         return $settings_tabs;
     }
 
-    public static function settings_tab() {
+    public function settings_tab() {
         woocommerce_admin_fields( self::get_settings() );
     }
 
-    public static function update_settings() {
+    public function update_settings() {
         woocommerce_update_options( self::get_settings() );
     }
 
     public function get_sections() {
         $sections = array(
-            '' => __( 'Test Link 1', 'woocommerce' ),
-            'testlink2' => __( 'Test Link 2', 'woocommerce' ),
+            '' => __( 'Test Link 1', 'devvn-shippingdiscount' ),
+            'testlink2' => __( 'Test Link 2', 'devvn-shippingdiscount' ),
         );
 
-        return apply_filters( 'woocommerce_sections', $sections );
+        return apply_filters( 'woocommerce_get_sections_' . $this->id, $sections );
     }
 
-    public static function get_settings() {
+    public function output_sections() {
+        global $current_section;
 
-        $settings = array(
-            'section_title' => array(
-                'name'     => __( 'Section Title', 'woocommerce-settings-tab-demo' ),
-                'type'     => 'title',
-                'desc'     => '',
-                'id'       => 'wc_settings_tab_demo_section_title'
-            ),
-            'title' => array(
-                'name' => __( 'Title', 'woocommerce-settings-tab-demo' ),
-                'type' => 'text',
-                'desc' => __( 'This is some helper text', 'woocommerce-settings-tab-demo' ),
-                'id'   => 'wc_settings_tab_demo_title'
-            ),
-            'description' => array(
-                'name' => __( 'Description', 'woocommerce-settings-tab-demo' ),
-                'type' => 'textarea',
-                'desc' => __( 'This is a paragraph describing the setting. Lorem ipsum yadda yadda yadda. Lorem ipsum yadda yadda yadda. Lorem ipsum yadda yadda yadda. Lorem ipsum yadda yadda yadda.', 'woocommerce-settings-tab-demo' ),
-                'id'   => 'wc_settings_tab_demo_description'
-            ),
-            'section_end' => array(
-                'type' => 'sectionend',
-                'id' => 'wc_settings_tab_demo_section_end'
-            )
-        );
+        $sections = $this->get_sections();
 
-        return apply_filters( 'wc_settings_tab_demo_settings', $settings );
+        if ( empty( $sections ) || 1 === sizeof( $sections ) ) {
+            return;
+        }
+
+        echo '<ul class="subsubsub">';
+
+        $array_keys = array_keys( $sections );
+
+        foreach ( $sections as $id => $label ) {
+            echo '<li><a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
+        }
+
+        echo '</ul><br class="clear" />';
+    }
+
+    public function get_settings() {
+
+        global $current_section;
+        if('' == $current_section) {
+            $settings = array(
+                'section_title' => array(
+                    'name' => __('Section Title', 'woocommerce-settings-tab-demo'),
+                    'type' => 'title',
+                    'desc' => '',
+                    'id' => 'wc_' . $this->id . '_section_title'
+                ),
+                'title' => array(
+                    'name' => __('Title', 'woocommerce-settings-tab-demo'),
+                    'type' => 'text',
+                    'desc' => __('This is some helper text', 'woocommerce-settings-tab-demo'),
+                    'id' => 'wc_' . $this->id . '_title'
+                ),
+                'description' => array(
+                    'name' => __('Description', 'woocommerce-settings-tab-demo'),
+                    'type' => 'textarea',
+                    'desc' => __('This is a paragraph describing the setting. Lorem ipsum yadda yadda yadda. Lorem ipsum yadda yadda yadda. Lorem ipsum yadda yadda yadda. Lorem ipsum yadda yadda yadda.', 'woocommerce-settings-tab-demo'),
+                    'id' => 'wc_' . $this->id . '_description'
+                ),
+                'section_end' => array(
+                    'type' => 'sectionend',
+                    'id' => 'wc_' . $this->id . '_section_end'
+                )
+            );
+        }elseif('testlink2' == $current_section){
+            $settings = array(
+                'section_title' => array(
+                    'name' => __('Section Title', 'woocommerce-settings-tab-demo'),
+                    'type' => 'title',
+                    'desc' => '',
+                    'id' => 'wc_' . $this->id . '_section_title'
+                ),
+                'title' => array(
+                    'name' => __('Title', 'woocommerce-settings-tab-demo'),
+                    'type' => 'text',
+                    'desc' => __('This is some helper text', 'woocommerce-settings-tab-demo'),
+                    'id' => 'wc_' . $this->id . '_title'
+                ),
+                'section_end' => array(
+                    'type' => 'sectionend',
+                    'id' => 'wc_' . $this->id . '_section_end'
+                )
+            );
+        }
+
+        return apply_filters( 'woocommerce_get_settings_' . $this->id, $settings, $current_section );
     }
 
 }
 
-DevVN_Discount_Shipping_Class::init();
+new DevVN_Shipping_Discount_Class;
