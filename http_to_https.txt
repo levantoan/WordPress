@@ -19,3 +19,5 @@
         $tags['og:url'] = str_replace( 'https://', 'http://', $tags['og:url'] );
         return $tags;
     }
+6. Trong thuộc tính của comment facebook thay data-href thành như sau
+    data-href="<?php echo str_replace('https://', 'http://', get_the_permalink());?>"
