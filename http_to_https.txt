@@ -1,0 +1,21 @@
+1. Sử dụng itheme security plugin để active sang SSL
+2. Thêm đoạn code sau vào wp-config.php để truy cập ssl trong admin
+    define('FORCE_SSL_ADMIN', true);
+3. Thêm code sau vào htaccess để chuyển thướng 301 toàn bộ link ko có https sang https
+    <IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    </IfModule>
+4. Đăng ký site https với google webmaster tool
+5. Nếu web có comment của facebook thì thêm đoạn code sau vào functions.php của theme bạn đang sử dụng
+    /*Face http to https*/
+    add_filter( 'wpseo_opengraph_url', 'yoast_http_og_url' );
+    function yoast_http_og_url( $url ) {
+        return str_replace( 'https://', 'http://', $url );
+    }
+    add_filter( 'jetpack_open_graph_tags', 'jetpack_http_og_url' );
+    function jetpack_http_og_url( $tags ) {
+        $tags['og:url'] = str_replace( 'https://', 'http://', $tags['og:url'] );
+        return $tags;
+    }
