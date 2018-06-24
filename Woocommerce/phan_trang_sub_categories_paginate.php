@@ -17,8 +17,9 @@ function devvn_woocommerce_after_shop_loop(){
                 'current' => max(1, $subcat_paged),
                 'total' => $subcat_total_pages,
                 'mid_size' => '10',
-                'prev_text' => __('Prev', 'devvn'),
-                'next_text' => __('Next', 'devvn'),
+                'prev_text' => __('‹', 'devvn'),
+                'next_text' => __('›', 'devvn'),
+                'type'	=>	'list'
             ));
             echo '</div>';
         }
