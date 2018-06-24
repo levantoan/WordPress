@@ -5,7 +5,30 @@ Author: Le Van Toan
 Author URI: levantoan.com
 */
 
+
+add_action('woocommerce_after_shop_loop', 'devvn_woocommerce_after_shop_loop');
+function devvn_woocommerce_after_shop_loop(){
+    global $subcat_paged, $subcat_total_pages, $devvn_product_categories;
+    if($devvn_product_categories) {
+        if ($subcat_total_pages > 1) {
+            echo '<div class="subcat_pagenavi">';
+            echo paginate_links(array(
+                'format' => '?pagedcat=%#%',
+                'current' => max(1, $subcat_paged),
+                'total' => $subcat_total_pages,
+                'mid_size' => '10',
+                'prev_text' => __('Prev', 'devvn'),
+                'next_text' => __('Next', 'devvn'),
+            ));
+            echo '</div>';
+        }
+    }
+}
+
 function woocommerce_output_product_categories( $args = array() ) {
+
+    global $subcat_paged, $subcat_total_pages, $devvn_product_categories;
+
     $args = wp_parse_args( $args, array(
         'before'    => apply_filters( 'woocommerce_before_output_product_categories', '' ),
         'after'     => apply_filters( 'woocommerce_after_output_product_categories', '' ),
@@ -33,44 +56,31 @@ function woocommerce_output_product_categories( $args = array() ) {
         echo $args['after']; // WPCS: XSS ok.
     }else{
 
-        $total = count($product_categories);
-        $number = 12;
-        $paged = isset($_GET['pagedcat']) ? intval($_GET['pagedcat']) : 1;
-        $total_pages = ceil($total/$number);
+        $subcat_total = count($product_categories);
+        $subcat_number = 1;
+        $subcat_paged = isset($_GET['pagedcat']) ? intval($_GET['pagedcat']) : 1;
+        $subcat_total_pages = ceil($subcat_total/$subcat_number);
 
-        $product_categories = get_categories( apply_filters( 'devvn_woocommerce_product_subcategories_args', array(
+        $devvn_product_categories = get_categories( apply_filters( 'devvn_woocommerce_product_subcategories_args', array(
             'parent'       => $parent_id,
             'menu_order'   => 'ASC',
             'hide_empty'   => 0,
             'hierarchical' => 1,
             'taxonomy'     => 'product_cat',
             'pad_counts'   => 1,
-            'number'    =>  $number,
-            'offset'    =>  ($paged - 1) * $number,
+            'number'    =>  $subcat_number,
+            'offset'    =>  ($subcat_paged - 1) * $subcat_number,
         ) ) );
 
         echo $args['before']; // WPCS: XSS ok.
 
-        foreach ($product_categories as $category) {
+        foreach ($devvn_product_categories as $category) {
             wc_get_template('content-product_cat.php', array(
                 'category' => $category,
             ));
         }
 
         echo $args['after']; // WPCS: XSS ok.
-
-        if($total > $number) {
-            echo '<div class="subcat_pagenavi">';
-            echo paginate_links(array(
-                'format' => '?pagedcat=%#%',
-                'current' => max(1, $paged),
-                'total' => $total_pages,
-                'mid_size' => '10',
-                'prev_text' => __('Prev', 'devvn'),
-                'next_text' => __('Next', 'devvn'),
-            ));
-            echo '</div>';
-        }
 
     }
 
