@@ -5,7 +5,7 @@
     <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{HTTPS} off
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    RewriteRule (.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     </IfModule>
 4. Đăng ký site https với google webmaster tool
 5. Nếu web có comment của facebook thì thêm đoạn code sau vào functions.php của theme bạn đang sử dụng
