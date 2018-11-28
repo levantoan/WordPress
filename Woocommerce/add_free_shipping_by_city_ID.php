@@ -76,8 +76,9 @@ function devn_custom_ghtk_shipping_method_init() {
              */
             public function calculate_shipping( $package = array() ) {
                 $country = $package["destination"]["city"];
+                $cart_subtotal = isset($package['cart_subtotal']) ? $package['cart_subtotal'] : '';
                 $_city = explode(',',$this->_city);
-                if(in_array($country, $_city)) {
+                if(in_array($country, $_city) && $cart_subtotal >= 1000000) {
                     $this->add_rate(
                         array(
                             'label' => $this->title,
