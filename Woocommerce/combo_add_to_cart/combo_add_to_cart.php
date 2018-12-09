@@ -382,12 +382,3 @@ function devvn_add_combo_func() {
     wp_send_json_error();
     die();
 }
-
-add_action('woocommerce_single_product_summary','devvn_custom_text_after_title', 6);
-function devvn_custom_text_after_title(){
-    global $product;
-    $custom_text  = get_field('customtext_aftertitle', $product->get_id());
-    if($custom_text){
-        echo '<div class="item-bestseller">'.$custom_text.'</div>';
-    }
-}
