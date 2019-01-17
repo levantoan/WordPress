@@ -1,0 +1,16 @@
+{{{data.id}}}
+
+==========EACH=============
+<# _.each( data, function(res, index) { #> <option value='{{res.field}}'>{{res.field}}</option> <# }) #> 
+
+==========IF ELSE=============
+<# if ( data.status.name ) { #>
+  <div class="zao-item-status">
+    <span class="zao-status-color" style="display: inline-block;background-color:{{ data.status.color }};width:10px; height:10px;"></span>
+    {{{ data.open }}}
+      {{ data.status.name }}
+    {{{ data.close }}}
+  </div>
+<# } else { #>
+  &mdash;
+<# } #>
