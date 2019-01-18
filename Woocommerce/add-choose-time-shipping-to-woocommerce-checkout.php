@@ -88,6 +88,6 @@ function devvn_after_shipping_address_vat($order)
 {
     $shipping_time = get_post_meta($order->get_id(), 'shipping_time', true);
     if($shipping_time){
-        echo '<div class=""><strong>Thời gian có thể nhận hàng: '.$shipping_time.'</strong></div>';
+        echo '<div class=""><strong>Thời gian có thể nhận hàng:</strong> '.$shipping_time.'</div>';
     }
 }
