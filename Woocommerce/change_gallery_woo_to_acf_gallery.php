@@ -7,7 +7,7 @@ add_action( 'wp_ajax_change_gallery_woo_to_acf', 'change_gallery_woo_to_acf_func
 function change_gallery_woo_to_acf_func() {
     $all_products = new WP_Query(array(
         'post_type' =>  'product',
-        'p' =>  224,
+        'posts_per_page' => -1
     ));
     if($all_products->have_posts()):
         while($all_products->have_posts()):$all_products->the_post();
