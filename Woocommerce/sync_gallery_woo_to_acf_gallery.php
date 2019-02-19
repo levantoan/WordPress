@@ -15,6 +15,7 @@ function change_gallery_woo_to_acf_func() {
             if(!is_array($old_gallery)){
                 $t = explode(',', $old_gallery);
                 update_post_meta(get_the_ID(), '_product_image_gallery', $t);
+                add_post_meta(get_the_ID(), '__product_image_gallery', 'field_5c4c7e9559d47'); // Change field_5c4c7e9559d47 to your field name in ACF
                 echo $old_gallery . ' => ' . maybe_serialize($t) . '<br>';
             }
         endwhile;
