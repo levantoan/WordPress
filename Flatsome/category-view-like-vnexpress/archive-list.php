@@ -1,3 +1,9 @@
+<?php
+/*
+* Flatsome theme
+* File in {your-child-theme}/template-parts/posts
+*/
+?>
 <?php if ( have_posts() ) : ?>
 	<style>
 		.news_latest_top:after {
