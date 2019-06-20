@@ -10,7 +10,7 @@ function list_searcheable_acf()
     $list_searcheable_acf = array("_sku");
     return $list_searcheable_acf;
 }
-function advanced_custom_search($where, &$wp_query)
+function advanced_custom_search($where, $wp_query)
 {
     global $wpdb;
     if (empty($where))
