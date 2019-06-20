@@ -2,6 +2,8 @@
 /*
 Add SKU below title in Woocommerce
 Author: levantoan.com
+
+Add this code to functions.php in your theme
 */
 //Remove sku default
 add_filter('wc_product_sku_enabled','__return_false');
