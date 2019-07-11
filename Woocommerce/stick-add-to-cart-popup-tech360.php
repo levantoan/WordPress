@@ -101,7 +101,7 @@ function devvn_fixed_bar_add_to_cart(){
     <div class="devvn_woo_fixed_bar">
         <ul>
             <li>
-                <a href="<?php echo home_url();?>" title="tel:0902785760">
+                <a href="tel:0902785760" title="Gọi ngay">
                     <i class="fa fa-phone"></i>
                     <span>Gọi điện</span>
                 </a>
