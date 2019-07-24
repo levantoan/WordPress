@@ -38,3 +38,32 @@ Add this CSS to your style.css
         });
     });
 })(jQuery);
+
+
+//Code thứ 2 nếu code trên ko được
+
+(function($){
+    $(document).ready(function () {
+		if($('.product-info.summary').length > 0) {
+            $('.product-info.summary').each(function () {
+                var oldPriceWrap = $('.price-wrapper', this);
+                var thisOldPrice = oldPriceWrap.html();
+                $('body .product-info.summary').on('change', '.variation_id', function () {
+                    var thisVal = $(this).val();
+                    var thisForm = $(this).closest('.variations_form.cart');
+                    var thisVariation = thisForm.data('product_variations');
+                    clearNotice();
+                    if (thisVal) {
+                        $(thisVariation).each(function (index, value) {
+                           if(value.variation_id == thisVal) {
+                               oldPriceWrap.html(value.price_html);
+                           }
+                        });
+                    }else{
+                        oldPriceWrap.html(thisOldPrice);
+                    }
+                });
+            });
+        }
+	});
+})(jQuery);
