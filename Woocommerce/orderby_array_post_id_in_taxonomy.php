@@ -1,3 +1,4 @@
+<?php
 /*
 Author: levantoan.com
 Sắp xếp bài viết theo list ID cho trước
@@ -54,3 +55,61 @@ function devvn_acf_fields_relationship_query($args, $field, $term_id){
     }
     return $args;
 }
+
+//ACF field
+if( function_exists('acf_add_local_field_group') ):
+
+acf_add_local_field_group(array(
+	'key' => 'group_5dea06175d708',
+	'title' => 'Sản phẩm nổi bật',
+	'fields' => array(
+		array(
+			'key' => 'field_5dea062596c47',
+			'label' => 'Danh sách sản phẩm nổi bật',
+			'name' => 'feature_product_cat',
+			'type' => 'relationship',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'post_type' => array(
+				0 => 'product',
+			),
+			'taxonomy' => '',
+			'filters' => array(
+				0 => 'search',
+				1 => 'post_type',
+				2 => 'taxonomy',
+			),
+			'elements' => array(
+				0 => 'featured_image',
+			),
+			'min' => '',
+			'max' => '',
+			'return_format' => 'id',
+		),
+	),
+	'location' => array(
+		array(
+			array(
+				'param' => 'taxonomy',
+				'operator' => '==',
+				'value' => 'product_cat',
+			),
+		),
+	),
+	'menu_order' => 0,
+	'position' => 'normal',
+	'style' => 'default',
+	'label_placement' => 'top',
+	'instruction_placement' => 'label',
+	'hide_on_screen' => '',
+	'active' => true,
+	'description' => '',
+));
+
+endif;
