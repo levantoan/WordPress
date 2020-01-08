@@ -6,8 +6,8 @@ Insert to functions.php
 
 class Devvn_Cf7_CRMLongPhat{
 
-    protected $username = "data";
-    protected $password = "crmlongphat12131415@";
+    protected $username = "";
+    protected $password = "";
     public $url = "http://crm.longphat.com.vn/service/v4_1/rest.php";
     protected $goi_crm = '';
     public $cf7ID = '';
