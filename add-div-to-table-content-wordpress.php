@@ -7,3 +7,10 @@ function devvn_table_respon($content) {
     return $content;
 }
 add_filter('the_content', 'devvn_table_respon');
+
+/*CSS
+.devvn_table_respon {
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+*/
