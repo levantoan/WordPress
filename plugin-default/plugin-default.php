@@ -2,12 +2,15 @@
 /*
 * Plugin Name: Plugin Default
 * Version: 1.0.0
+* Requires PHP: 7.2
 * Description:
 * Author: Le Van Toan
 * Author URI: http://levantoan.com
 * Plugin URI: http://levantoan.com
 * Text Domain: devvn-textdefault
 * Domain Path: /languages
+* WC requires at least: 3.5.4
+* WC tested up to: 4.0.1
 
 ==Change to edit default==
 Plugin_Default_Class
