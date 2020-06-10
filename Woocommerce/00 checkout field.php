@@ -71,3 +71,9 @@ if(!function_exists('dms_sort_fields_by_order')) {
         return ($a['priority'] < $b['priority']) ? -1 : 1;
     }
 }
+
+
+add_action( 'woocommerce_admin_order_data_after_shipping_address', 'my_custom_checkout_field_display_admin_order_meta', 10, 1 );
+function my_custom_checkout_field_display_admin_order_meta($order){
+    echo '<p><strong>'.__('Số ĐT người nhận').':</strong> <br>' . get_post_meta( $order->id, '_shipping_phone', true ) . '</p>';
+}
