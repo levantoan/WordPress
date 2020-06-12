@@ -112,3 +112,11 @@ function devvn_remove_slug_special_charset($string) {
     return strtr($string, $trans);
 }
 add_filter('sanitize_title', 'devvn_remove_slug_special_charset', 1);
+
+function modify_post_title( $data ){
+    if($data['post_title']) {
+        $data['post_title'] = normalizer_normalize($data['post_title']);
+    }
+    return $data;
+}
+add_filter( 'wp_insert_post_data' , 'modify_post_title' , '99', 1 );
