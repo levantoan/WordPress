@@ -1,135 +1,145 @@
-/*ACF*/
+/*Functions.php*/
+
 if( function_exists('acf_add_local_field_group') ):
 
-acf_add_local_field_group(array(
-	'key' => 'group_5e7885f995612',
-	'title' => 'Sản phẩm cùng loại',
-	'fields' => array(
-		array(
-			'key' => 'field_5e788606527fc',
-			'label' => 'Chọn sản phẩm cùng loại',
-			'name' => 'sanpham_cungloai',
-			'type' => 'repeater',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array(
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'collapsed' => '',
-			'min' => 0,
-			'max' => 0,
-			'layout' => 'table',
-			'button_label' => 'Thêm sản phẩm',
-			'sub_fields' => array(
-				array(
-					'key' => 'field_5e788620527fd',
-					'label' => 'Tiêu đề',
-					'name' => 'tieu_de',
-					'type' => 'text',
-					'instructions' => '',
-					'required' => 0,
-					'conditional_logic' => 0,
-					'wrapper' => array(
-						'width' => '',
-						'class' => '',
-						'id' => '',
-					),
-					'default_value' => '',
-					'placeholder' => '',
-					'prepend' => '',
-					'append' => '',
-					'maxlength' => '',
-				),
-				array(
-					'key' => 'field_5e788633527fe',
-					'label' => 'Sản phẩm',
-					'name' => 'san_pham_cl',
-					'type' => 'post_object',
-					'instructions' => '',
-					'required' => 0,
-					'conditional_logic' => 0,
-					'wrapper' => array(
-						'width' => '',
-						'class' => '',
-						'id' => '',
-					),
-					'post_type' => array(
-						0 => 'product',
-					),
-					'taxonomy' => '',
-					'allow_null' => 0,
-					'multiple' => 0,
-					'return_format' => 'id',
-					'ui' => 1,
-				),
-			),
-		),
-	),
-	'location' => array(
-		array(
-			array(
-				'param' => 'post_type',
-				'operator' => '==',
-				'value' => 'product',
-			),
-		),
-	),
-	'menu_order' => 0,
-	'position' => 'normal',
-	'style' => 'default',
-	'label_placement' => 'top',
-	'instruction_placement' => 'label',
-	'hide_on_screen' => '',
-	'active' => true,
-	'description' => '',
-));
+    acf_add_local_field_group(array(
+        'key' => 'group_5e7885f995612',
+        'title' => 'Sản phẩm cùng loại',
+        'fields' => array(
+            array(
+                'key' => 'field_5e788606527fc',
+                'label' => 'Chọn sản phẩm cùng loại',
+                'name' => 'sanpham_cungloai',
+                'type' => 'repeater',
+                'instructions' => '',
+                'required' => 0,
+                'conditional_logic' => 0,
+                'wrapper' => array(
+                    'width' => '',
+                    'class' => '',
+                    'id' => '',
+                ),
+                'collapsed' => '',
+                'min' => 0,
+                'max' => 0,
+                'layout' => 'table',
+                'button_label' => 'Thêm sản phẩm',
+                'sub_fields' => array(
+                    array(
+                        'key' => 'field_5e788620527fd',
+                        'label' => 'Tiêu đề',
+                        'name' => 'tieu_de',
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'prepend' => '',
+                        'append' => '',
+                        'maxlength' => '',
+                    ),
+                    array(
+                        'key' => 'field_5e788633527fe',
+                        'label' => 'Sản phẩm',
+                        'name' => 'san_pham_cl',
+                        'type' => 'post_object',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'post_type' => array(
+                            0 => 'product',
+                        ),
+                        'taxonomy' => '',
+                        'allow_null' => 0,
+                        'multiple' => 0,
+                        'return_format' => 'id',
+                        'ui' => 1,
+                    ),
+                ),
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'product',
+                ),
+            ),
+        ),
+        'menu_order' => 0,
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'hide_on_screen' => '',
+        'active' => true,
+        'description' => '',
+    ));
 
 endif;
-
-/*Functions.php*/
 
 add_action('woocommerce_single_product_summary','devvn_box_sanpham_cungloai', 21);
 function devvn_box_sanpham_cungloai(){
     global $product;
     $current_id = $product->get_id();
-    if(have_rows('sanpham_cungloai')):
-        $count = count(get_field('sanpham_cungloai'));
+    $sanpham_cungloai = get_field('sanpham_cungloai', $current_id);
+    $first = array();
+    $output = array();
+    if($sanpham_cungloai && !empty($sanpham_cungloai)){
+        foreach ($sanpham_cungloai as $item){
+            $san_pham_cl = isset($item['san_pham_cl']) ? $item['san_pham_cl'] : '';
+            if($san_pham_cl && $san_pham_cl == $current_id){
+                $first[] = $item;
+            }else {
+                $output[] = $item;
+            }
+        }
+    }
+
+    $output = array_merge($first, $output);
+
+    if($output && !empty($output)){
         echo '<div class="sanpham_cungloai_wrap">';
+        echo '<p>Bạn đang chọn: <strong>'.$first[0]['tieu_de'].'</strong></p>';
         echo '<ul class="sanpham_cungloai_list">';
-        while(have_rows('sanpham_cungloai')):the_row();
-            $custom_title = get_sub_field('tieu_de');
-            $san_pham_cl = get_sub_field('san_pham_cl');
+        foreach ($output as $item){
+            $san_pham_cl = isset($item['san_pham_cl']) ? $item['san_pham_cl'] : '';
+            $tieu_de = isset($item['tieu_de']) ? $item['tieu_de'] : '';
             $product_item = wc_get_product($san_pham_cl);
-            if($product_item) {
-                $price = $product_item->get_price();
+            if($product_item && !is_wp_error($product_item)) {
                 $link = $product_item->get_permalink();
                 $classs = '';
                 if ($current_id == $product_item->get_id()) {
                     $link = 'javascript:void(0)';
                     $classs = 'active';
                 }
-                $congsuat = $product_item->get_attribute('pa_cong-suat-lam-lanh') ? $product_item->get_attribute('pa_cong-suat-lam-lanh') : null;
-                if ($congsuat && !$custom_title) {
-                    $custom_title = $congsuat;
-                }
-                if (!$custom_title) $custom_title = $product_item->get_title();
+                if (!$tieu_de) $tieu_de = $product_item->get_title();
                 ?>
                 <li>
-                    <a href="<?php echo $link; ?>" title="<?php echo $product_item->get_title(); ?>">
+                    <a href="<?php echo $link; ?>" rel="nofollow" title="<?php echo $product_item->get_title(); ?>">
                         <div class="sp_cungloai_box <?php echo $classs; ?>">
-                            <span class="sp_cungloai_title"><?php echo $custom_title; ?></span>
-                            <span class="sp_cungloai_price"><?php echo $product_item->get_price_html();?></span>
+                            <span class="sp_cungloai_title"><?php echo $tieu_de; ?></span>
+                            <span class="sp_cungloai_price"><?php echo $product_item->get_price_html(); ?></span>
                         </div>
                     </a>
                 </li>
                 <?php
             }
-        endwhile;
+        }
         echo '</ul></div>';
-    endif;
+    }
 }
 
 function syn_sanpham_cungloai($post_id) {
@@ -148,12 +158,11 @@ function syn_sanpham_cungloai($post_id) {
 }
 add_action('acf/save_post', 'syn_sanpham_cungloai', 10);
 
-/*Style*/
+/*Style.css*/
 ul.sanpham_cungloai_list {
     list-style: none;
     padding: 0;
     margin: 0 0 20px;
-    overflow: hidden;
 }
 ul.sanpham_cungloai_list li {
     float: left;
@@ -175,6 +184,7 @@ ul.sanpham_cungloai_list li {
 span.sp_cungloai_price {
     display: block;
     color: #e30000;
+    white-space: nowrap;
 }
 span.sp_cungloai_title {
     position: relative;
@@ -229,3 +239,65 @@ span.sp_cungloai_price del .amount, span.sp_cungloai_price del {
     font-size: 13px;
     margin: 0;
 }
+.sanpham_cungloai_wrap button.flickity-button.flickity-prev-next-button {
+    opacity: 1;
+    top: 50%;
+    margin-top: -21px;
+    bottom: auto;
+}
+.sanpham_cungloai_wrap button.flickity-button.flickity-prev-next-button svg path {
+    fill: #b3b3b3;
+}
+.sanpham_cungloai_wrap button.flickity-button.flickity-prev-next-button svg {
+    padding: 0;
+    margin: 0;
+    width: 25px;
+    height: 25px;
+}
+.sanpham_cungloai_wrap button.flickity-button.flickity-prev-next-button.previous {
+    left: 0;
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+}
+.sanpham_cungloai_wrap button.flickity-button.flickity-prev-next-button.next {
+    right: 0;
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+}
+.sanpham_cungloai_wrap .sanpham_cungloai_list.flickity-enabled {
+    padding: 0 20px;
+    position: relative;
+}
+.sp_cungloai_box:hover{
+    border-color: #f89008;
+}
+.sanpham_cungloai_wrap p {
+    margin-bottom: 10px;
+}
+
+/*jQuery*/
+(function($){
+    $(document).ready(function(){
+        if($('.sanpham_cungloai_list').length > 0) {
+            var sliderWrap = $('.sanpham_cungloai_list');
+            sliderWrap.flickity({
+                "cellAlign": "left",
+                "wrapAround": false,
+                "autoPlay": false,
+                "prevNextButtons": true,
+                "imagesLoaded": true,
+                "freeScroll": true,
+                "pageDots": false,
+                "rightToLeft": false,
+                "contain": true,
+                "groupCells": true,
+                "arrowShape": {
+                    x0: 10,
+                    x1: 60, y1: 50,
+                    x2: 65, y2: 50,
+                    x3: 20
+                }
+            });
+        }
+    });
+})(jQuery);
