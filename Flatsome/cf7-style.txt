@@ -1,0 +1,15 @@
+<div class="row row-small">
+<div class="col medium-6 small-12 large-6 pb-0">
+<div class="col-inner">[text* your-name placeholder "Họ và tên"]</div>
+</div>
+<div class="col medium-6 small-12 large-6 pb-0">
+<div class="col-inner">[text* your-phone placeholder "Số điện thoại"]</div>
+</div>
+<div class="col medium-12 small-12 large-12 pb-0">
+<div class="col-inner">[email* your-email placeholder "Email"]</div>
+</div>
+<div class="col medium-12 small-12 large-12 pb-0">
+<div class="col-inner">[textarea your-message placeholder "Nội dung lời nhắn"]</div>
+</div>
+</div>
+[submit "Send"]
