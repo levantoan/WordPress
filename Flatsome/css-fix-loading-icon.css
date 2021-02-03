@@ -1,0 +1,3 @@
+.row>div:not(.col):not([class^="col-"]).loading-spin {
+    width: 30px !important;
+}
