@@ -1,0 +1,13 @@
+<?php
+/*
+Change related products query by attribute. Ex pa_thuong-hieu
+Add to functions.php in your theme
+Author levantoan.com
+*/
+add_filter('woocommerce_product_related_posts_relate_by_tag', '__return_false');
+add_filter('woocommerce_get_related_product_cat_terms', 'devvn_woocommerce_get_related_product_cat_terms', 10, 2);
+function devvn_woocommerce_get_related_product_cat_terms($term_arg, $prod_id){
+    $term_arg = wc_get_product_term_ids($prod_id, 'pa_thuong-hieu');
+	return $term_arg;
+	
+}
