@@ -10,14 +10,31 @@ function website_remove($fields)
     return $fields;
 }
 
+function devvn_array_insert_before($key, array &$array, $new_key, $new_value) {
+    if (array_key_exists($key, $array)) {
+        $new = array();
+        foreach ($array as $k => $value) {
+            if ($k === $key) {
+                $new[$new_key] = $new_value;
+            }
+            $new[$k] = $value;
+        }
+        return $new;
+    }
+    return FALSE;
+}
+
 add_filter( 'comment_form_default_fields', 'add_phone_comment_form_defaults');
 function add_phone_comment_form_defaults( $fields ) {
     $commenter = wp_get_current_commenter();
-    $fields[ 'phone' ] = '<p class="comment-form-url">'.
+    $fields_phone = '<p class="comment-form-url">'.
         '<label for="phone">' . __( 'Số điện thoại' ) . '<span class="required">*</span></label>'.
         '<input id="phone" name="phone" type="text" size="30"  tabindex="4" required="required"/></p>';
     $fields[ 'author' ] = '<p class="comment-form-author">' . '<label for="author">' . __( 'Họ tên <span class="required">*</span>' ) . '</label> ' .
         '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" size="30" maxlength="245" /></p>';
+
+    $fields_new = devvn_array_insert_before('cookies', $fields, 'phone', $fields_phone);
+    if($fields_new) $fields = $fields_new;
 
     return $fields;
 }
