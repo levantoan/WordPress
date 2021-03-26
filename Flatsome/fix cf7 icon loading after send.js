@@ -1,3 +1,5 @@
+<script type='text/javascript'>
 document.addEventListener( 'wpcf7submit', function( event ) {
-  $('.wpcf7-form .processing').removeClass('processing');
+  jQuery('.wpcf7 .processing').removeClass('processing');
 }, false );
+</script>
