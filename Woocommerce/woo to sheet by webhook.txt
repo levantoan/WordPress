@@ -1,0 +1,53 @@
+/*add custom metabox to webhook*/
+function devvn_custom_wc_api_order_response( $response, $object, $request ) {
+
+    if( empty( $response->data ) )
+        return $response;
+
+    $billing_utmsoure      = get_post_meta($object->get_id() , '_billing_utmsoure' , true );
+    $response->data['billing_utmsoure'] = $billing_utmsoure;
+
+    $billing_utmmedium      = get_post_meta($object->get_id() , '_billing_utmmedium' , true );
+    $response->data['billing_utmmedium'] = $billing_utmmedium;
+
+
+    return $response;
+}
+add_filter( "woocommerce_rest_prepare_shop_order_object", 'devvn_custom_wc_api_order_response', 10, 3 );
+
+/*Add code to script. Insert value to sheet by script*/
+
+//this is a function that fires when the webapp receives a GET request
+function doGet(e) {
+  return HtmlService.createHtmlOutput("request received");
+}
+
+//this is a function that fires when the webapp receives a POST request
+function doPost(e) {
+  var myData = JSON.parse([e.postData.contents]);
+
+  var billing_utmsoure = myData.billing_utmsoure;
+  var order_number = myData.number;
+  var order_created = myData.date_created;
+  var order_status = myData.status;
+  var order_total = myData.total;
+  var billing_email = myData.billing.email;
+  var billing_phone = myData.billing.phone;
+  var billing_first_name = myData.billing.first_name;
+  var billing_last_name = myData.billing.last_name;
+  var billing_company = myData.shipping.company;
+  var shipping_address_1 = myData.shipping.address_1;
+  var shipping_address_2 = myData.shipping.address_2;
+  var shipping_city= myData.billing.city;
+  var shipping_state= myData.billing.state;
+  var shipping_postcode= myData.billing.postcode;
+  var timestamp = new Date();
+  var sheet = SpreadsheetApp.getActiveSheet();
+
+  for (var i = 0; i < myData.line_items.length; i++) {
+    var product_name = myData.line_items[i].name;
+    var product_qty = myData.line_items[i].quantity;
+    var product_total = myData.line_items[i].total;
+    sheet.appendRow([billing_utmsoure,order_number,order_created,product_name,product_qty,product_total,order_total,billing_email,billing_phone,billing_first_name,billing_last_name,billing_company,shipping_address_1,shipping_address_2,shipping_city,shipping_state,shipping_postcode,timestamp,order_status]);
+  }
+}
