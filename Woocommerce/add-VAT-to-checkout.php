@@ -161,3 +161,23 @@ function vat_fee() {
     }
 
 }
+
+add_action('woocommerce_email_customer_details', 'vat_to_email', 5);
+function vat_to_email($order){
+    $devvn_xuat_vat_input = get_post_meta($order->get_id(), 'devvn_xuat_vat_input', true);
+    $billing_vat_company = get_post_meta($order->get_id(), 'billing_vat_company', true);
+    $billing_vat_mst = get_post_meta($order->get_id(), 'billing_vat_mst', true);
+    $billing_vat_companyaddress = get_post_meta($order->get_id(), 'billing_vat_companyaddress', true);
+
+    ?>
+    <div style="margin-bottom: 40px;">
+        <p><strong>Xuất hóa đơn VAT:</strong> <?php echo ($devvn_xuat_vat_input) ? 'Có' : 'Không';?></p>
+        <?php if($devvn_xuat_vat_input):?>
+        <strong>Thông tin xuất hóa đơn:</strong><br>
+        Tên công ty: <?php echo $billing_vat_company;?><br>
+        Mã số thuế: <?php echo $billing_vat_mst;?><br>
+        Địa chỉ: <?php echo $billing_vat_companyaddress;?><br>
+        <?php endif;?>
+    </div>
+    <?php
+}
