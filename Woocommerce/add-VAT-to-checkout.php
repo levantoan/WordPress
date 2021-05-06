@@ -1,7 +1,7 @@
-<?php
 /*
  * Thêm lựa chọn xuất hóa đơn VAT vào checkout
  * Author: https://levantoan.com
+ * Thêm vào functions.php của theme
  * */
 add_action('woocommerce_after_checkout_billing_form','devvn_xuat_hoa_don_vat');
 function devvn_xuat_hoa_don_vat(){
@@ -79,7 +79,8 @@ function devvn_xuat_hoa_don_vat(){
                         parentVAT.addClass('vat_active');
                     }else{
                         parentVAT.removeClass('vat_active');
-                    }
+                    }                   
+                    $('body').trigger('update_checkout');
                 }
                 check_vat();
                 $('input.devvn_xuat_vat_input').on('change', function () {
@@ -90,7 +91,6 @@ function devvn_xuat_hoa_don_vat(){
     </script>
     <?php
 }
-
 add_action('woocommerce_checkout_process', 'vat_checkout_field_process');
 function vat_checkout_field_process()
 {
@@ -106,7 +106,6 @@ function vat_checkout_field_process()
         }
     }
 }
-
 add_action('woocommerce_checkout_update_order_meta', 'vat_checkout_field_update_order_meta');
 function vat_checkout_field_update_order_meta($order_id)
 {
@@ -123,7 +122,6 @@ function vat_checkout_field_update_order_meta($order_id)
         }
     }
 }
-
 add_action( 'woocommerce_admin_order_data_after_shipping_address', 'devvn_after_shipping_address_vat', 99);
 function devvn_after_shipping_address_vat($order){
     $devvn_xuat_vat_input = get_post_meta($order->get_id(), 'devvn_xuat_vat_input', true);
@@ -143,4 +141,23 @@ function devvn_after_shipping_address_vat($order){
         </p>
     <?php
     endif;
+}
+
+
+add_action( 'woocommerce_cart_calculate_fees','vat_fee' );
+function vat_fee() {
+    global $woocommerce;
+
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) )
+        return;
+
+    if (isset($_POST['post_data']) && !empty($_POST['post_data'])) {
+        parse_str(wp_unslash($_POST['post_data']), $post_data);
+        if(isset($post_data['devvn_xuat_vat_input']) && !empty($post_data['devvn_xuat_vat_input'])) {
+            $percentage = 0.1;
+            $vat_fee = $woocommerce->cart->cart_contents_total * $percentage;
+            $woocommerce->cart->add_fee('VAT(10%)', $vat_fee, true, '');
+        }
+    }
+
 }
