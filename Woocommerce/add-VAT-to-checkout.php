@@ -143,6 +143,17 @@ function devvn_after_shipping_address_vat($order){
     endif;
 }
 
+add_action('woocommerce_before_calculate_totals', 'save_vat_fee_to_session');
+function save_vat_fee_to_session(){
+    if (isset($_POST['post_data']) && !empty($_POST['post_data'])) {
+        parse_str(wp_unslash($_POST['post_data']), $post_data);
+        if(isset($post_data['devvn_xuat_vat_input']) && !empty($post_data['devvn_xuat_vat_input'])) {
+            WC()->session->set( 'devvn_xuat_vat_input', true );
+        }else{
+            WC()->session->set( 'devvn_xuat_vat_input', false );
+        }
+    }
+}
 
 add_action( 'woocommerce_cart_calculate_fees','vat_fee' );
 function vat_fee() {
@@ -151,13 +162,10 @@ function vat_fee() {
     if ( is_admin() && ! defined( 'DOING_AJAX' ) )
         return;
 
-    if (isset($_POST['post_data']) && !empty($_POST['post_data'])) {
-        parse_str(wp_unslash($_POST['post_data']), $post_data);
-        if(isset($post_data['devvn_xuat_vat_input']) && !empty($post_data['devvn_xuat_vat_input'])) {
-            $percentage = 0.1;
-            $vat_fee = $woocommerce->cart->cart_contents_total * $percentage;
-            $woocommerce->cart->add_fee('VAT(10%)', $vat_fee, true, '');
-        }
+    if(WC()->session->get( 'devvn_xuat_vat_input')){
+        $percentage = 0.1;
+        $vat_fee = $woocommerce->cart->cart_contents_total * $percentage;
+        $woocommerce->cart->add_fee('VAT(10%)', $vat_fee, true, '');
     }
 
 }
