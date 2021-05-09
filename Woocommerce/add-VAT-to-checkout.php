@@ -1,3 +1,4 @@
+<?php
 /*
  * Thêm lựa chọn xuất hóa đơn VAT vào checkout
  * Author: https://levantoan.com
@@ -5,6 +6,7 @@
  * */
 add_action('woocommerce_after_checkout_billing_form','devvn_xuat_hoa_don_vat');
 function devvn_xuat_hoa_don_vat(){
+    if(get_option('devvn_vat_info', 'yes') == 'no') return false;
     ?>
     <style>
         .devvn_xuat_hoa_don_do {
@@ -79,7 +81,7 @@ function devvn_xuat_hoa_don_vat(){
                         parentVAT.addClass('vat_active');
                     }else{
                         parentVAT.removeClass('vat_active');
-                    }                   
+                    }
                     $('body').trigger('update_checkout');
                 }
                 check_vat();
@@ -162,9 +164,10 @@ function vat_fee() {
     if ( is_admin() && ! defined( 'DOING_AJAX' ) )
         return;
 
-    if(WC()->session->get( 'devvn_xuat_vat_input')){
-        $percentage = 0.1;
-        $vat_fee = $woocommerce->cart->cart_contents_total * $percentage;
+    $percentage = floatval(get_option('devvn_vat_fee', 10)) / 100;
+    $vat_fee = $woocommerce->cart->cart_contents_total * $percentage;
+
+    if(get_option('devvn_vat_enable', 'no') == 'yes' || WC()->session->get( 'devvn_xuat_vat_input')){
         $woocommerce->cart->add_fee('VAT(10%)', $vat_fee, true, '');
     }
 
@@ -181,11 +184,50 @@ function vat_to_email($order){
     <div style="margin-bottom: 40px;">
         <p><strong>Xuất hóa đơn VAT:</strong> <?php echo ($devvn_xuat_vat_input) ? 'Có' : 'Không';?></p>
         <?php if($devvn_xuat_vat_input):?>
-        <strong>Thông tin xuất hóa đơn:</strong><br>
-        Tên công ty: <?php echo $billing_vat_company;?><br>
-        Mã số thuế: <?php echo $billing_vat_mst;?><br>
-        Địa chỉ: <?php echo $billing_vat_companyaddress;?><br>
+            <strong>Thông tin xuất hóa đơn:</strong><br>
+            Tên công ty: <?php echo $billing_vat_company;?><br>
+            Mã số thuế: <?php echo $billing_vat_mst;?><br>
+            Địa chỉ: <?php echo $billing_vat_companyaddress;?><br>
         <?php endif;?>
     </div>
     <?php
+}
+
+add_filter('woocommerce_get_settings_advanced', 'devvn_vat_woocommerce_settings_pages');
+function devvn_vat_woocommerce_settings_pages($settings){
+    $one_page_settings = array(
+        array(
+            'title' => __( 'Cài đặt VAT', 'devvn-vat' ),
+            'desc'  => __( 'Cài đặt VAT ở trang checkout', 'devvn-vat' ),
+            'type'  => 'title',
+            'id'    => 'devvn_vat_page_options',
+        ),
+        array(
+            'title'           => __( 'Bắt buộc tính VAT', 'devvn-vat' ),
+            'desc'            => __( 'Nếu chọn mục này thì khách có chọn xuất VAT hay không thì vẫn tính phí VAT', 'devvn-vat' ),
+            'id'              => 'devvn_vat_enable',
+            'default'         => 'no',
+            'type'            => 'checkbox',
+        ),
+        array(
+            'title'           => __( 'Mức phí VAT (%)', 'devvn-vat' ),
+            'desc'            => __( 'Mức phí VAT. Mặc định là 10%', 'devvn-vat' ),
+            'id'              => 'devvn_vat_fee',
+            'default'         => 10,
+            'type'            => 'number',
+        ),
+        array(
+            'title'           => __( 'Hiển thị trường thông tin VAT', 'devvn-vat' ),
+            'desc'            => __( 'Hiển thị hoặc không trường thông tin cho phép khách chọn xuất hoặc không xuất VAT', 'devvn-vat' ),
+            'id'              => 'devvn_vat_info',
+            'default'         => 'yes',
+            'type'            => 'checkbox',
+        ),
+        array(
+            'type' => 'sectionend',
+            'id'   => 'devvn_vat_page_options',
+        ),
+    );
+    $settings = array_merge($one_page_settings, $settings);
+    return $settings;
 }
