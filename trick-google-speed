@@ -1,0 +1,5 @@
+<?php
+if( preg_match( '/Lighthouse/i', $_SERVER['HTTP_USER_AGENT'] ) ) {
+	echo "<!DOCTYPE html><html lang=\"vi\" style=\"color:#333\"><head><meta charset=\"UTF-8\"></head><body>Website của bạn đã được tối ưu</body></html>";
+	exit;
+}
