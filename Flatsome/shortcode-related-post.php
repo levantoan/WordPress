@@ -26,7 +26,7 @@ function flatsome_related_posts(){
             $ids = implode(',', $ids);
             echo '<div class="devvn_cat_tv">';
             //echo do_shortcode('[blog_posts type="row" image_hover="zoom" excerpt="false" show_date="text" depth="' . flatsome_option('blog_posts_depth') . '" depth_hover="' . flatsome_option('blog_posts_depth_hover') . '" text_align="' . get_theme_mod( 'blog_posts_title_align', 'center' ) . '" columns="3" ids="' . $ids . '"]');
-            echo do_shortcode('[blog_posts style="normal" type="row" columns="3" columns__md="2" posts="6" image_height="56.25%" text_align="left" ids="' . $ids . '"]');
+            echo do_shortcode('[blog_posts style="normal" type="row" show_date="false" excerpt="false" comments="false" columns="3" columns__md="2" posts="6" image_height="56.25%" text_align="left" ids="' . $ids . '"]');
             echo '</div>';
         endif; wp_reset_query();
         echo '</div>';
