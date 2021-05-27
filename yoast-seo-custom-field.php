@@ -32,3 +32,19 @@ function filter_wpseo_replacements( $replacements ) {
     return $replacements;
 };
 add_filter( 'wpseo_replacements', 'filter_wpseo_replacements', 10, 1 );
+
+function services_filter_wpseo_replacements( $replacements ) {
+    global $post;
+    if( isset( $replacements['%%cf_services%%'] ) ){
+        $services = get_field('services', $post->ID);
+        if($services){
+            $out = array();
+            foreach ($services as $item){
+                $out[] = isset($item['label']) ? sanitize_text_field($item['label']) : '';
+            }
+        }
+        $replacements['%%cf_services%%'] = implode(', ', $out);
+    }
+    return $replacements;
+};
+add_filter( 'wpseo_replacements', 'services_filter_wpseo_replacements', 10, 1 );
