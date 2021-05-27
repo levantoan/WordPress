@@ -33,9 +33,10 @@ function filter_wpseo_replacements( $replacements ) {
 };
 add_filter( 'wpseo_replacements', 'filter_wpseo_replacements', 10, 1 );
 
+//meta value is table
 function services_filter_wpseo_replacements( $replacements ) {
     global $post;
-    if( isset( $replacements['%%cf_services%%'] ) ){
+    //if( isset( $replacements['%%cf_services%%'] ) ){
         $services = get_field('services', $post->ID);
         if($services){
             $out = array();
@@ -44,7 +45,7 @@ function services_filter_wpseo_replacements( $replacements ) {
             }
         }
         $replacements['%%cf_services%%'] = implode(', ', $out);
-    }
+    //}
     return $replacements;
 };
 add_filter( 'wpseo_replacements', 'services_filter_wpseo_replacements', 10, 1 );
