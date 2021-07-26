@@ -10,7 +10,7 @@ function process_contact_form_data( $cf7 ){
             $email = esc_html($post_data['your-email']);
             $message = esc_html($post_data['your-message']);
 
-            $_wpcf7ID = intval($post_data['_wpcf7']);
+            $_wpcf7ID = intval($cf7->id());
             if($_wpcf7ID == 232){
                 $my_post = array(
                     'post_type'		=>	'testimonial',
