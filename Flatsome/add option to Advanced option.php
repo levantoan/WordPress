@@ -31,6 +31,9 @@ if(!function_exists('array_insert_after')) {
 add_action( 'init', 'devvn_of_options', 20 );
 function devvn_of_options(){
     global $of_options;
+    
+    if(!$of_options) return;
+    
     $new_option = array(
         'name' => 'Hiển thị thông báo',
         'id'   => 'devvn_notice',
