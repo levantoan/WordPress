@@ -1,0 +1,2 @@
+//Delete all user not verify
+wp user delete $(wp user list --meta_key=wcemailverified '--meta_compare=NOT EXISTS' --role=customer --field=ID --allow-root) --yes --allow-root
