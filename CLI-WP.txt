@@ -1,2 +1,5 @@
 //Delete all user not verify
 wp user delete $(wp user list --meta_key=wcemailverified '--meta_compare=NOT EXISTS' --role=customer --field=ID --allow-root) --yes --allow-root
+
+//Delete All coupon
+wp post delete $(wp post list --post_type=shop_coupon --fields=ID --allow-root) --force --allow-root
