@@ -1,0 +1,6 @@
+<?php
+
+remove_action('woocommerce_archive_description', 'woocommerce_taxonomy_archive_description');
+remove_action('woocommerce_archive_description', 'woocommerce_product_archive_description');
+add_action('flatsome_products_after', 'woocommerce_taxonomy_archive_description', 2);
+add_action('flatsome_products_after', 'woocommerce_product_archive_description', 2);
