@@ -36,12 +36,12 @@ $(".viewmore a").click(function(){
 
 			},
 			success: function(response) {
-				if(response.type == "success") {
-					jQuery("#vote_counter").html(response.vote_count);
+				if(response.success) {
+                        window.location.href = "http://stackoverflow.com";
+				}else {
+					alert(response.data);
 				}
-				else {
-				   alert("Your vote could not be added");
-				}
+				form.removeClass('loading');
 			},
 			error: function( jqXHR, textStatus, errorThrown ){
 				
