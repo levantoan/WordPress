@@ -48,7 +48,7 @@ function save_comment_meta_data( $comment_id ) {
 
 add_filter( 'preprocess_comment', 'verify_comment_meta_data' );
 function verify_comment_meta_data( $commentdata ) {
-    if(!is_admin() && !is_user_logged_in()) {
+    if (!is_admin() && !is_user_logged_in() && 'post' === get_post_type( absint( $_POST['comment_post_ID'] ))) {
         if (!isset($_POST['phone']))
             wp_die(__('Lỗi: Số điện thoại là bắt buộc'));
 
