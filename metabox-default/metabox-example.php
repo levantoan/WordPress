@@ -18,6 +18,16 @@ class MenuOrder_Options_Meta_Box {
     public function init_metabox() {
         add_action( 'add_meta_boxes', array( $this, 'add_metabox'  )        );
         add_action( 'save_post',      array( $this, 'save_metabox' ), 10, 2 );
+        
+        //add_action( 'edit_form_after_title', array($this,'edit_form_after_title') );
+    }
+    
+    function edit_form_after_title() {
+        global $post, $wp_meta_boxes;
+
+        do_meta_boxes( get_current_screen(), 'shop_after_title', $post );
+
+        unset( $wp_meta_boxes['shop_list']['shop_after_title'] );
     }
 
     /**
@@ -31,7 +41,7 @@ class MenuOrder_Options_Meta_Box {
                 __('Options Menu Order', 'devvn-menuorder'),
                 array($this, 'render_metabox'),
                 $post_type,
-                'normal',
+                'normal', //shop_after_title
                 'high'
             );
         }
