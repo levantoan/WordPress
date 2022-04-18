@@ -1,4 +1,3 @@
-
 /*
 * Thêm nút mua hàng tại shopee và tiki sau nút thêm vào giỏ hàng
 * Author: levantoan.com
@@ -51,12 +50,20 @@ function devvn_button_other_shop(){
             a.devvn_buy_now.devvn_buy_now_style {
                 max-width: 100%;
             }
+            .only-mobile{
+                display: none;
+            }
+            @media (max-width: 767px){
+                .only-mobile{
+                    display: block;
+                }
+            }
         </style>
         <div class="devvn_button_other_shop">
             <?php if($shopee):?><a href="<?php echo esc_url($shopee);?>" title="Mua trên Shopee" target="_blank" class="button btn-shopee">Mua trên Shopee</a><?php endif;?>
             <?php if($tiki):?><a href="<?php echo esc_url($tiki);?>" title="Mua trên Tiki" target="_blank" class="button btn-tiki">Mua trên Tiki</a><?php endif;?>
             <?php if($lazada):?><a href="<?php echo esc_url($lazada);?>" title="Mua trên Lazada" target="_blank" class="button btn-lazada">Mua trên Lazada</a><?php endif;?>
-            <?php if($tiktok):?><a href="<?php echo esc_url($tiktok);?>" title="Mua trên Tiktok" target="_blank" class="button btn-tiktok">Mua trên Tiktok</a><?php endif;?>
+            <?php if($tiktok):?><a href="<?php echo esc_url($tiktok);?>" title="Mua trên Tiktok" target="_blank" class="button btn-tiktok only-mobile">Mua trên Tiktok</a><?php endif;?>
         </div>
     <?php
     endif;
