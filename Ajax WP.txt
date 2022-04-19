@@ -1,4 +1,4 @@
-<?php wp_nonce_field('charity_nonce_action','charity_nonce');?>
+wp_nonce_field('charity_nonce_action','charity_nonce');?>
 $nonce = wp_create_nonce("my_user_vote_nonce");
 /////////////////////////////////////////// Function
 //Ajax load post
@@ -37,14 +37,15 @@ $(".viewmore a").click(function(){
 			},
 			success: function(response) {
 				if(response.success) {
-                        window.location.href = "http://stackoverflow.com";
+                        		window.location.href = "http://stackoverflow.com";
 				}else {
 					alert(response.data);
 				}
 				form.removeClass('loading');
 			},
 			error: function( jqXHR, textStatus, errorThrown ){
-				
+				alert("Lỗi không xác định. Vui lòng thử lại sau");
+                		thisWrap.removeClass('kwp_loading');
 			}
 		})   
 		return false;
@@ -59,7 +60,7 @@ echo json_encode($result);
 //js var formvalue = form.serialize();
 parse_str($_POST['data'], $params);	
 
-
+window.location.href = response.data;
 
 API
 
