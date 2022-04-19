@@ -84,3 +84,49 @@ function edmunds_api_func() {
 	echo json_encode($edmunds_data);
 	die();
 }
+
+var xhr_compare = null;
+function search_to_compare(form){
+	var keyword = $('.input_search_compare', form).val();
+	var prod = $('.prod_compare', form).val();
+	var thisWrap = $(form).closest('.search_to_compare');
+	var resultWrap = $('.search_compare_result', thisWrap);
+	if(xhr_compare) {
+		xhr_compare.abort();
+	}
+	if($.trim(keyword).length >= 2){
+		xhr_compare = $.ajax({
+			type : "post",
+			dataType : "json",
+			url : devvn_array.admin_ajax,
+			data : {
+				action: "devvn_compare",
+				keyword: keyword,
+				prod: prod
+			},
+			context: this,
+			beforeSend: function(){
+				thisWrap.addClass('compare_loading');
+			},
+			success: function(response) {
+				thisWrap.removeClass('compare_load_noresult');
+				resultWrap.show();
+				if(response.success) {
+					resultWrap.html(response.data);
+				}else {
+					thisWrap.addClass('compare_load_noresult');
+					resultWrap.html(response.data);
+				}
+				thisWrap.removeClass('compare_loading');
+				xhr_compare = null;
+			},
+			error: function( jqXHR, textStatus, errorThrown ){
+				xhr_compare = null;
+				thisWrap.removeClass('compare_loading');
+			}
+		});
+	}else{
+		resultWrap.html('').hide();
+	}
+	return false;
+}
