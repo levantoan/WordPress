@@ -1,13 +1,18 @@
-<?php
 add_shortcode( 'devvn_woo_stock', 'display_product_stock_status' );
 function display_product_stock_status( $atts) {
 
     $atts = shortcode_atts(
-        array('id'  => get_the_ID() ),
+        array(
+            'id'  => get_the_ID()
+        ),
         $atts, 'devvn_woo_stock'
     );
-    $product = wc_get_product( $atts['id'] );
-    $availabilitys = $product->get_availability();
+    if(isset($atts['id']) && $atts['id']) {
+        $product = wc_get_product($atts['id']);
+    }else{
+        global $product;
+    }
+    if(!$product) return false;
     ob_start();
     if ( ! $product->is_in_stock() ) {
         $availability = __( 'Out of stock', 'woocommerce' );
@@ -25,9 +30,12 @@ function display_product_stock_status( $atts) {
         }
         $availability = apply_filters( 'devvn_woocommerce_stock_html', $stock_html, $product );
     }
+    $availabilitys = $product->get_availability();
+    $class = isset($availabilitys['class'] )&& $availabilitys['class'] ? $availabilitys['class'] : '';
     ?>
-    <span class="devvn_stock_status"><strong><?php _e('Tình trạng:', 'devvn'); ?></strong>
-        <span class="stock <?php echo esc_attr($availabilitys['class']); ?>"><?php echo $availability;?></span>
+    <span class="devvn_stock_status">
+        <strong><?php _e('Tình trạng:', 'devvn'); ?></strong>
+        <span class="stock <?php echo esc_attr($class); ?>"><?php echo $availability;?></span>
     </span>
     <?php
     return ob_get_clean();
