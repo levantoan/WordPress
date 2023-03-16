@@ -196,8 +196,12 @@ function vat_fee() {
 
     $percentage = floatval(get_option('devvn_vat_fee', 10)) / 100;
     $percentage_none = floatval(get_option('devvn_none_vat_fee', 4)) / 100;
-    $vat_fee = $woocommerce->cart->cart_contents_total * $percentage;
-    $none_vat_fee = $woocommerce->cart->cart_contents_total * $percentage_none;
+    /*$vat_fee = $woocommerce->cart->cart_contents_total * $percentage;
+    $none_vat_fee = $woocommerce->cart->cart_contents_total * $percentage_none;*/
+
+    $total = WC()->cart->get_cart_contents_total() + WC()->cart->get_shipping_total() + WC()->cart->get_taxes_total( false, false );
+    $vat_fee = $total * $percentage;
+    $none_vat_fee = $total * $percentage_none;
 
     $devvn_xuat_vat_input = intval(WC()->session->get( 'devvn_xuat_vat_input'));
     $devvn_vat_enable = get_option('devvn_vat_enable', 'no');
