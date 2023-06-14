@@ -1,3 +1,4 @@
+<?php
 /*
 * sắp xếp local_pickup (nhận tại cửa hàng) xuống cuối cùng của các hình thức vận chuyển
 * sort local_pickup to the bottom of the shipping method
