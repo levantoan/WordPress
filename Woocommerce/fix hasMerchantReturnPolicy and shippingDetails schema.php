@@ -2,6 +2,21 @@
 add_filter( 'woocommerce_structured_data_product_offer', 'devvn_woocommerce_structured_data_product_offer' );
 add_filter( 'wpseo_schema_product', 'devvn_wpseo_schema_product' );
 add_filter( 'rank_math/snippet/rich_snippet_product_entity', 'devvn_rich_snippet_product_entity' );
+add_filter( 'wp_schema_pro_schema_product', 'devvn_wp_schema_pro_schema_product' );
+
+function devvn_wp_schema_pro_schema_product($schema){
+	$hasMerchantReturnPolicy = devvn_hasMerchantReturnPolicy();
+	$shippingDetails = devvn_shippingDetails();
+	if(isset($schema['offers']) && apply_filters( 'wp_schema_pro_remove_product_offers', true )) {
+	    if(!isset($schema['offers']['hasMerchantReturnPolicy']) && $hasMerchantReturnPolicy){
+		$schema['offers']['hasMerchantReturnPolicy'] = json_decode($hasMerchantReturnPolicy, true);
+	    }
+	    if(!isset($schema['offers']['shippingDetails']) && $shippingDetails){
+		$schema['offers']['shippingDetails'] = json_decode($shippingDetails, true);
+	    }
+	}
+	return $schema;
+}
 
 function devvn_hasMerchantReturnPolicy(){
     return '{
