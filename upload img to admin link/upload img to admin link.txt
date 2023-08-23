@@ -1,0 +1,71 @@
+/*
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+PHP
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*/
+
+wp_enqueue_media();
+
+<div class="devvn_upload_img flex-row">
+    <div class="flex-col flex-grow"><input type="text" class="devvn_upload_value" name="giaychungnhan" id="giaychungnhan" placeholder="<?php _e( 'Đường dẫn hình ảnh', 'devvn' )?>" value="<?php echo esc_attr(esc_url($giaychungnhan));?>"/></div>
+    <div class="flex-col"><input type="button" class="devvn_upload-btn button" value="<?php _e( 'Chọn mẫu giấy', 'devvn' )?>" /></div>
+</div>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JS
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+$('body').on('click','.devvn_upload-btn',function(e){
+      e.preventDefault();
+      var thisUpload = $(this).parents('.devvn_upload_img');
+      meta_image_frame = wp.media.frames.meta_image_frame = wp.media({
+          title: 'Upload Image',
+          button: { text:  'Upload Image' },
+          library: { type: 'image' },
+          multiple: false
+      });
+      meta_image_frame.on('select', function(){
+          var media_attachment = meta_image_frame.state().get('selection').first().toJSON();
+
+          if ( media_attachment.url ) {
+              thisUpload.find('.devvn_upload_value').val(media_attachment.url);
+          }
+      });
+      meta_image_frame.open();
+  });
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CSS
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+.devvn_upload_img {
+    width: 100%;
+    max-width: 800px;
+}
+.flex-col.flex-grow {
+    margin-right: 10px;
+}
+
+.flex-row {
+    align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+.flex-col {
+    max-height: 100%;
+}
+.flex-left {
+    margin-right: auto;
+}
+.flex-right {
+    margin-left: auto;
+}
+.flex-grow {
+    -ms-flex-negative: 1;
+    -ms-flex-preferred-size: auto!important;
+    flex: 1;
+}
