@@ -1,4 +1,4 @@
-<?php wp_nonce_field('charity_nonce_action','charity_nonce');?>
+<?php wp_nonce_field('charity_nonce_action','charity_nonce');
 $nonce = wp_create_nonce("my_user_vote_nonce");
 /////////////////////////////////////////// Function
 //Ajax load post
@@ -21,7 +21,7 @@ function ajax_load_post() {
 if ( !wp_verify_nonce( $_REQUEST['nonce'], "my_user_vote_nonce")) {
       exit("No naughty business please");
    }   
-	die( "Hello World" );
+	die();
 }
 
 ///////////////////////////////////// Jquery
@@ -44,7 +44,8 @@ $(".viewmore a").click(function(){
 				form.removeClass('loading');
 			},
 			error: function( jqXHR, textStatus, errorThrown ){
-				
+				form.removeClass('loading');
+				alert(textStatus);
 			}
 		})   
 		return false;
@@ -60,6 +61,8 @@ echo json_encode($result);
 parse_str($_POST['data'], $params);	
 
 
+$body = wp_remote_retrieve_body( $request );
+$header_code = wp_remote_retrieve_response_code( $request );
 
 API
 
