@@ -1,0 +1,157 @@
+<?php
+
+if( function_exists('acf_add_local_field_group') ):
+
+    acf_add_local_field_group(array(
+        'key' => 'group_60d16a5ccba4c',
+        'title' => 'Product',
+        'fields' => array(
+            array(
+                'key' => 'field_625e1d961993a',
+                'label' => 'Link các sàn TMDT',
+                'name' => 'shop_link',
+                'type' => 'repeater',
+                'instructions' => '',
+                'required' => 0,
+                'conditional_logic' => 0,
+                'wrapper' => array(
+                    'width' => '',
+                    'class' => '',
+                    'id' => '',
+                ),
+                'collapsed' => '',
+                'min' => 0,
+                'max' => 0,
+                'layout' => 'block',
+                'button_label' => '',
+                'sub_fields' => array(
+                    array(
+                        'key' => 'field_625e1e4a1993b',
+                        'label' => 'Chọn sàn',
+                        'name' => 'chon_san',
+                        'type' => 'radio',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '50',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            'shopee' => 'Shopee',
+                            'tiki' => 'Tiki',
+                            'lazada' => 'Lazada',
+                            'vuivui' => 'Vuivui',
+                            'tiktok' => 'Tiktok',
+                            'custom' => 'Custom',
+                        ),
+                        'allow_null' => 0,
+                        'other_choice' => 0,
+                        'default_value' => '',
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                        'save_other_choice' => 0,
+                    ),
+                    array(
+                        'key' => 'field_625e1eae1993c',
+                        'label' => 'Link to',
+                        'name' => 'link_to',
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 1,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '50',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'prepend' => '',
+                        'append' => '',
+                        'maxlength' => '',
+                    ),
+                    array(
+                        'key' => 'field_625e1ebf1993d',
+                        'label' => 'Icon',
+                        'name' => 'icon',
+                        'type' => 'image',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => array(
+                            array(
+                                array(
+                                    'field' => 'field_625e1e4a1993b',
+                                    'operator' => '==',
+                                    'value' => 'custom',
+                                ),
+                            ),
+                        ),
+                        'wrapper' => array(
+                            'width' => '50',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'return_format' => 'url',
+                        'preview_size' => 'medium',
+                        'library' => 'all',
+                        'min_width' => '',
+                        'min_height' => '',
+                        'min_size' => '',
+                        'max_width' => '',
+                        'max_height' => '',
+                        'max_size' => '',
+                        'mime_types' => '',
+                    ),
+                    array(
+                        'key' => 'field_625e1edb1993e',
+                        'label' => 'Name',
+                        'name' => 'name',
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => array(
+                            array(
+                                array(
+                                    'field' => 'field_625e1e4a1993b',
+                                    'operator' => '==',
+                                    'value' => 'custom',
+                                ),
+                            ),
+                        ),
+                        'wrapper' => array(
+                            'width' => '50',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'prepend' => '',
+                        'append' => '',
+                        'maxlength' => '',
+                    ),
+                ),
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'product',
+                ),
+            ),
+        ),
+        'menu_order' => 0,
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'hide_on_screen' => '',
+        'active' => true,
+        'description' => '',
+        'show_in_rest' => 0,
+    ));
+
+endif;		

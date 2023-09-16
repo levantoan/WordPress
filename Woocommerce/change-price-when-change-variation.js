@@ -7,7 +7,29 @@ Add this CSS to your style.css
     display: none !important;
 }
 
+Sử dụng 1 trong 2 js bên dưới
+
 */
+/* JS 1 */
+
+(function ($) {
+    $(document).ready(function () {
+        if($('form.variations_form.cart').length > 0) {
+            $('form.variations_form.cart').each(function (){
+                let thisWrap = $(this).parent();
+                let oldPrice = $('.price-wrapper > .price', thisWrap).html();
+                $(this).on('show_variation', function (e, variation) {
+                    $('.price-wrapper > .price', thisWrap).html(variation.price_html);
+                });
+                $(this).on('hide_variation', function (e) {
+                    $('.price-wrapper > .price', thisWrap).html(oldPrice);
+                });
+            })
+        }
+  });
+})(jQuery);
+
+/* HOẠCE CODE JS 2 */
 
 (function ($) {
     $(document).ready(function () {

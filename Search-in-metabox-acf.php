@@ -7,7 +7,7 @@ function list_searcheable_acf(){
 function advanced_custom_search( $where, $wp_query ) {
     global $wpdb;
 
-    if ( empty( $where ))
+    if ( empty( $where ) || $wp_query->query['post_type'] != 'tracuu_baohanh')
         return $where;
 
     // get search expression

@@ -1,4 +1,4 @@
-<?php wp_nonce_field('charity_nonce_action','charity_nonce');
+wp_nonce_field('charity_nonce_action','charity_nonce');?>
 $nonce = wp_create_nonce("my_user_vote_nonce");
 /////////////////////////////////////////// Function
 //Ajax load post
@@ -21,7 +21,7 @@ function ajax_load_post() {
 if ( !wp_verify_nonce( $_REQUEST['nonce'], "my_user_vote_nonce")) {
       exit("No naughty business please");
    }   
-	die();
+	die( "Hello World" );
 }
 
 ///////////////////////////////////// Jquery
@@ -37,15 +37,15 @@ $(".viewmore a").click(function(){
 			},
 			success: function(response) {
 				if(response.success) {
-                        window.location.href = "http://stackoverflow.com";
+                        		window.location.href = "http://stackoverflow.com";
 				}else {
 					alert(response.data);
 				}
 				form.removeClass('loading');
 			},
 			error: function( jqXHR, textStatus, errorThrown ){
-				form.removeClass('loading');
-				alert(textStatus);
+				alert("Lỗi không xác định. Vui lòng thử lại sau");
+                		thisWrap.removeClass('kwp_loading');
 			}
 		})   
 		return false;
@@ -60,9 +60,7 @@ echo json_encode($result);
 //js var formvalue = form.serialize();
 parse_str($_POST['data'], $params);	
 
-
-$body = wp_remote_retrieve_body( $request );
-$header_code = wp_remote_retrieve_response_code( $request );
+window.location.href = response.data;
 
 API
 
@@ -86,4 +84,50 @@ function edmunds_api_func() {
 	//print_r($edmunds_data);
 	echo json_encode($edmunds_data);
 	die();
+}
+
+var xhr_compare = null;
+function search_to_compare(form){
+	var keyword = $('.input_search_compare', form).val();
+	var prod = $('.prod_compare', form).val();
+	var thisWrap = $(form).closest('.search_to_compare');
+	var resultWrap = $('.search_compare_result', thisWrap);
+	if(xhr_compare) {
+		xhr_compare.abort();
+	}
+	if($.trim(keyword).length >= 2){
+		xhr_compare = $.ajax({
+			type : "post",
+			dataType : "json",
+			url : devvn_array.admin_ajax,
+			data : {
+				action: "devvn_compare",
+				keyword: keyword,
+				prod: prod
+			},
+			context: this,
+			beforeSend: function(){
+				thisWrap.addClass('compare_loading');
+			},
+			success: function(response) {
+				thisWrap.removeClass('compare_load_noresult');
+				resultWrap.show();
+				if(response.success) {
+					resultWrap.html(response.data);
+				}else {
+					thisWrap.addClass('compare_load_noresult');
+					resultWrap.html(response.data);
+				}
+				thisWrap.removeClass('compare_loading');
+				xhr_compare = null;
+			},
+			error: function( jqXHR, textStatus, errorThrown ){
+				xhr_compare = null;
+				thisWrap.removeClass('compare_loading');
+			}
+		});
+	}else{
+		resultWrap.html('').hide();
+	}
+	return false;
 }

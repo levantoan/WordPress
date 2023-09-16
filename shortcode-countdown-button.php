@@ -13,7 +13,7 @@ add_shortcode('button_countdown', 'devvn_button_countdown_func');
 function devvn_button_countdown_func($atts, $content)
 {
     $atts = shortcode_atts(array(
-        'time' => 10,
+        'time' => 60,
         'code' => '',
         'title' => 'Nhấp vào đây để lấy mã bảo mật'
     ), $atts, 'button_countdown');
@@ -40,7 +40,7 @@ function devvn_button_countdown_func($atts, $content)
             var $content = '<?php echo esc_attr(wp_strip_all_tags($content));?>';
             var countdownCode_<?php echo $id;?>=setInterval(function(){
                 counter--
-                document.getElementById('countDown_<?php echo $id;?>').innerHTML='Mã bảo mật sẽ hiện sau ' + counter + ' giây' + ' bạn nhé';
+                document.getElementById('countDown_<?php echo $id;?>').innerHTML='Nội dung sẽ hiện sau ' + counter + ' giây';
                 if(counter==0){
                     if($code) {
                         document.getElementById('countDown_<?php echo $id;?>').innerHTML = 'Mã bảo mật của bạn là: ' + $code;
@@ -58,3 +58,56 @@ function devvn_button_countdown_func($atts, $content)
     return ob_get_clean();
 
 }
+
+/*Flatsome element*/
+function devvn_button_countdown_builder_element(){
+
+    add_ux_builder_shortcode( 'button_countdown', array(
+        'type' => 'container',
+        'name' => __( 'Button Countdown', 'devvn'),
+        'category' => __( 'Content' ),
+        'compile' => false,
+        'template_shortcode' => function ( $element, $options, $content, $parent = null ) {
+            if (
+                ! empty( $options )
+            ) {
+                return "[button_countdown{options}]\n\n{content}\n[/button_countdown]\n";
+            }
+            return "[button_countdown]\n\n{content}\n[/button_countdown]\n";
+        },
+        'directives' => array( 'ux-text-editor' ),
+        'priority' => 1,
+
+        'presets' => array(
+            array(
+                'name' => __( 'Ví dụ' ),
+                'content' => '[button_countdown]<p>Nội dung cần ẩn</p>[/button_countdown]'
+            )
+        ),
+
+        'options' => array(
+            '$content' => array(
+                'type'       => 'text-editor',
+                'full_width' => true,
+                'height'     => 'calc(100vh - 691px)',
+            ),
+            'code' => array(
+                'type' => 'textfield',
+                'heading' => 'Mật khẩu cần ẩn',
+                'default' => '',
+            ),
+            'time' => array(
+                'type' => 'textfield',
+                'heading' => 'Thời gian của nút (s)',
+                'default' => '60',
+            ),
+            'title' => array(
+                'type' => 'textfield',
+                'heading' => 'Chữ của nút',
+                'default' => 'Nhấp vào đây để lấy mã bảo mật',
+            )
+        )
+    ) );
+
+}
+add_action('ux_builder_setup', 'devvn_button_countdown_builder_element');
