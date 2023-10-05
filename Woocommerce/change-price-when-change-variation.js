@@ -19,14 +19,14 @@ Sử dụng 1 trong 2 js bên dưới
                 let thisWrap = $(this).parent();
                 let oldPrice = $('.price-wrapper > .price', thisWrap).html();
                 $(this).on('show_variation', function (e, variation) {
-                    $('.price-wrapper > .price', thisWrap).html(variation.price_html);
+                    if(variation.price_html) $('.price-wrapper > .price', thisWrap).html(variation.price_html);
                 });
                 $(this).on('hide_variation', function (e) {
                     $('.price-wrapper > .price', thisWrap).html(oldPrice);
                 });
             })
         }
-  });
+    });
 })(jQuery);
 
 /* HOẠCE CODE JS 2 */
