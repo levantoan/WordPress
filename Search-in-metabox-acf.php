@@ -11,7 +11,7 @@ function advanced_custom_search( $where, $wp_query ) {
         return $where;
 
     // get search expression
-    $terms = $wp_query->query_vars[ 's' ];
+    $terms = addslashes($wp_query->query_vars[ 's' ]);
 
     // explode search expression to get search terms
     $exploded = explode( ' ', $terms );
