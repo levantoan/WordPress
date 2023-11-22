@@ -53,7 +53,7 @@ function __search_by_title_only( $search, $wp_query )
     if(count($strSearch) >= 2){
         $strSearch = devvn_array_combinations($strSearch);
         foreach ($strSearch as $str){
-            $str_array[] = implode(" ", $str);
+            $str_array[] = implode(" ", addslashes($str));
         }
     }else{
         $str_array = $strSearch;
