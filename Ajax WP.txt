@@ -62,6 +62,8 @@ parse_str($_POST['data'], $params);
 
 window.location.href = response.data;
 
+location.reload();
+
 API
 
 add_action( 'wp_ajax_edmunds_api', 'edmunds_api_func' );
