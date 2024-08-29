@@ -1,3 +1,33 @@
+//Include js
+wp_enqueue_script('wp-utils');
+
+//Tạo Template
+<script type="text/html" id="tmpl-my-template">
+    <div class="my-item">
+        <h2>{{{ data.title }}}</h2>
+        <p>{{{ data.description }}}</p>
+    </div>
+</script>
+
+//Sử dụng Template
+
+jQuery(document).ready(function($) {
+    // Lấy template theo ID
+    var myTemplate = wp.template('my-template');
+
+    // Dữ liệu để đổ vào template
+    var data = {
+        title: 'Tiêu đề của bài viết',
+        description: 'Đây là phần mô tả của bài viết.'
+    };
+
+    // Render HTML từ template với dữ liệu
+    var renderedHtml = myTemplate(data);
+
+    // Chèn HTML đã render vào DOM
+    $('#content').html(renderedHtml);
+});
+
 {{{data.id}}}
 
 ==========EACH=============
@@ -14,3 +44,6 @@
 <# } else { #>
   &mdash;
 <# } #>
+
+
+
