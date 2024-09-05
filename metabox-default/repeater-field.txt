@@ -39,17 +39,17 @@ wp_enqueue_script('jquery-ui-sortable', 'wp-util');
               .on( 'click', '.add-layer', this.onAddRate )
               .on( 'click', '.delete-layer', this.onRemoveRate )
 
-          let boxes_data = $boxes.data( 'layers' );
+          let boxes_data = $boxes.data( 'layers' ) || [];
 
-          console.log(boxes_data);
-
-          $( boxes_data ).each( function( i ) {
-              let size = $boxes.find( '.layer_tr' ).length;
-              $boxes.append( phoimau_layer_temp( {
-                  item:  boxes_data[ i ],
-                  index: size
-              } ) );
-          } );
+            if (Array.isArray(boxes_data) && boxes_data.length > 0) {
+                $(boxes_data).each(function (i) {
+                    let size = $boxes.find('.layer_tr').length;
+                    $boxes.append(phoimau_layer_temp({
+                        item: boxes_data[i],
+                        index: size
+                    }));
+                });
+            }   
 
           $boxes.sortable( {
               items: 'tr',
