@@ -1,0 +1,124 @@
+//PHP
+wp_enqueue_script('jquery-ui-sortable', 'wp-util');
+
+//html
+
+<tbody class="phoimau_layer_list" data-layers="<?php echo esc_attr(json_encode($phoimau_layer));?>"></tbody>
+
+<script type="text/template" id="tmpl-phoimau-temp">
+    <tr class="layer_tr">
+        <td class="sort_td">{{ data.index + 1 }}</td>
+        <td><input type="text" name="phoimau_layer[{{ data.index }}][name]" value="{{ data.item.name }}" placeholder="<?php _e('Tên layer', DEVVN_PHOIMAUNHA_TEXTDOMAIN);?>"></td>
+        <td><input type="text" name="phoimau_layer[{{ data.index }}][color]" value="{{ data.item.color }}" class="phoimau_color"></td>
+        <td class="layer_img">
+            <div class="svl-upload-image <# if (data.item.img) { #>has-image<# } #>">
+                <div class="view-has-value">
+                    <input type="hidden" class="clone_delete upload_img_id" name="phoimau_layer[{{ data.index }}][img]" value="{{ data.item.img }}"/>
+                    <input type="hidden" class="clone_delete upload_img_src" name="phoimau_layer[{{ data.index }}][img_src]" value="{{ data.item.img_src }}"/>
+                    <img src="{{ data.item.img_src }}" class="image_view pins_img"/>
+                    <a href="#" class="svl-delete-image">x</a>
+                </div>
+                <div class="hidden-has-value"><input type="button" class="ireel-upload button" value="<?php _e( 'Chọn ảnh', 'devvn-phoi-mau-nha' )?>" /></div>
+            </div>
+        </td>
+        <td><button type="button" class="button button-link-delete delete-layer"><?php _e('Xoá', DEVVN_PHOIMAUNHA_TEXTDOMAIN);?></button></td>
+    </tr>
+</script>
+
+//js
+
+(function($, wp){
+
+  let phoimau_layer_temp = wp.template( 'phoimau-temp' ),
+      $boxes_table                    = $( '.layer_table' ),
+      $boxes                          = $boxes_table.find( 'tbody.phoimau_layer_list' );
+
+  var layer_rows = {
+      init: function() {
+          $boxes_table
+              .on( 'click', '.add-layer', this.onAddRate )
+              .on( 'click', '.delete-layer', this.onRemoveRate )
+
+          let boxes_data = $boxes.data( 'layers' );
+
+          console.log(boxes_data);
+
+          $( boxes_data ).each( function( i ) {
+              let size = $boxes.find( '.layer_tr' ).length;
+              $boxes.append( phoimau_layer_temp( {
+                  item:  boxes_data[ i ],
+                  index: size
+              } ) );
+          } );
+
+          $boxes.sortable( {
+              items: 'tr',
+              cursor: 'move',
+              axis: 'y',
+              handle: 'td.sort_td',
+              scrollSensitivity: 40,
+              helper: function(e,ui){
+                  ui.children().each( function() {
+                      $( this ).width( $(this).width() );
+                  });
+                  ui.css( 'left', '0' );
+                  return ui;
+              },
+              start: function( event, ui ) {
+                  ui.item.css('background-color','#f6f6f6');
+              },
+              stop: function( event, ui ) {
+                  ui.item.removeAttr( 'style' );
+                  layer_rows.reindexRows();
+              }
+          } );
+
+      },
+      onAddRate: function( event ) {
+          event.preventDefault();
+
+          const target = $boxes;
+          const size   = target.find( '.layer_tr' ).length;
+
+          target.append( phoimau_layer_temp( {
+              item:  {
+                  name: '',
+                  color: '',
+                  img: '',
+                  img_src: '',
+              },
+              index: size
+          } ) );
+
+          $('.phoimau_color').wpColorPicker();
+
+      },
+      onRemoveRate: function( event ) {
+          event.preventDefault();
+          if ( confirm( devvn_phoimaunha_admin.i18n.delete_text ) ) {
+              const thisTr = $(this).closest('tr');
+              thisTr.remove();
+              layer_rows.reindexRows();
+          }
+      },
+      reindexRows: function() {
+          let loop = 0;
+          $boxes.find('tr').each(function(index, row) {
+              $('input, select', row).each(function(i, el) {
+                  let t = $(el);
+                  let name = t.attr('name');
+                  if (name) {
+                      t.attr('name', name.replace(/\[(\d+)\]/, "[" + loop + "]"));
+                  }
+              });
+              $('.sort_td', row).each(function(i, el) {
+                  $(this).html(loop + 1);
+              });
+              loop++;
+          });
+      },
+  };
+
+  layer_rows.init();
+
+})(jQuery, wp);
