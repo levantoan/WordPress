@@ -33,19 +33,19 @@ $(".viewmore a").click(function(){
 			data : {action: "my_user_vote", post_id : post_id, nonce: nonce},
 			context: this,
 			beforeSend: function(){
-
+				thisWrap.addClass('loading');
 			},
 			success: function(response) {
 				if(response.success) {
-                        		window.location.href = "http://stackoverflow.com";
+					//window.location.href = "http://stackoverflow.com";
 				}else {
 					alert(response.data);
 				}
-				form.removeClass('loading');
+				thisWrap.removeClass('loading');
 			},
 			error: function( jqXHR, textStatus, errorThrown ){
 				alert("Lỗi không xác định. Vui lòng thử lại sau");
-                		thisWrap.removeClass('kwp_loading');
+				thisWrap.removeClass('loading');
 			}
 		})   
 		return false;
