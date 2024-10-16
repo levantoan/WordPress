@@ -1,0 +1,141 @@
+/****************************************************************
+Css
+****************************************************************/
+
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list {
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list li a {
+    position: relative;
+    padding-left: 25px;
+}
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list li a:before {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    left: 0;
+    top: 11px;
+}
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list li a:hover:after,
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list li.chosen a:after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 5px;
+    border: 1px solid red;
+    border-top: 0;
+    border-right: 0;
+    transform: rotate(-45deg);
+    left: 3px;
+    top: 14px;
+	background: #fff;
+}
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list li a:hover:before,
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list li.chosen a:before {
+    border-color: red;
+}
+.woocommerce-widget-layered-nav ul.woocommerce-widget-layered-nav-list li.chosen a:hover:after {
+    content: "x";
+    border: 0;
+    transform: rotate(0);
+    width: unset;
+    height: unset;
+    background: transparent;
+    line-height: 1;
+    font-size: 12px;
+    top: 12px;
+    left: 5px;
+    color: red;
+}
+.li-hidden {
+	display: none !important;
+}
+
+/****************************************************************
+JS cho biến thể. Quá 5 item sẽ ẩn
+****************************************************************/
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLists = document.querySelectorAll('.woocommerce-widget-layered-nav-list');
+      const maxVisibleItems = 5;
+
+      navLists.forEach(ul => {
+        const items = ul.querySelectorAll('li');
+
+        if (items.length > maxVisibleItems) {
+          for (let i = maxVisibleItems; i < items.length; i++) {
+            items[i].classList.add('li-hidden');
+          }
+
+          const showMoreLi = document.createElement('li');
+          showMoreLi.textContent = 'Xem thêm';
+          showMoreLi.style.cursor = 'pointer';
+          showMoreLi.style.display = 'block';
+          showMoreLi.style.padding = '10px 0 0';
+          showMoreLi.style.fontSize = '14px';
+          showMoreLi.style.color = '#109cd9';
+          ul.appendChild(showMoreLi);
+
+          const toggleItemsVisibility = (show) => {
+            for (let i = maxVisibleItems; i < items.length; i++) {
+              items[i].classList.toggle('li-hidden', !show);
+            }
+          };
+
+          showMoreLi.addEventListener('click', function() {
+            const isExpanded = showMoreLi.textContent === 'Thu gọn';
+            toggleItemsVisibility(!isExpanded);
+            showMoreLi.textContent = isExpanded ? 'Xem thêm' : 'Thu gọn';
+          });
+        }
+      });
+    });
+  </script>
+
+/****************************************************************
+JS cho danh mục. Quá 10 item sẽ ẩn
+****************************************************************/
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLists = document.querySelectorAll('.product-categories');
+      const maxVisibleItems = 10;
+
+      navLists.forEach(ul => {
+        const items = ul.querySelectorAll(':scope > li');
+
+        if (items.length > maxVisibleItems) {
+          for (let i = maxVisibleItems; i < items.length; i++) {
+            items[i].classList.add('li-hidden');
+          }
+
+          const showMoreLi = document.createElement('li');
+          showMoreLi.textContent = 'Xem thêm';
+          showMoreLi.style.cursor = 'pointer';
+          showMoreLi.style.display = 'block';
+          showMoreLi.style.padding = '10px 0 0';
+          showMoreLi.style.fontSize = '14px';
+          showMoreLi.style.color = '#109cd9';
+          ul.appendChild(showMoreLi);
+
+          const toggleItemsVisibility = (show) => {
+            for (let i = maxVisibleItems; i < items.length; i++) {
+              items[i].classList.toggle('li-hidden', !show);
+            }
+          };
+
+          showMoreLi.addEventListener('click', function() {
+            const isExpanded = showMoreLi.textContent === 'Thu gọn';
+            toggleItemsVisibility(!isExpanded);
+            showMoreLi.textContent = isExpanded ? 'Xem thêm' : 'Thu gọn';
+          });
+        }
+      });
+    });
+  </script>

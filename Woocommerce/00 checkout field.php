@@ -29,6 +29,7 @@ function dms_custom_override_checkout_fields($fields)
     $fields['billing']['billing_email']['priority'] = 25;
     $fields['billing']['billing_email']['class'] = array('form-row-wide');
     $fields['billing']['billing_email']['required'] = false;
+    $fields['billing']['billing_email']['placeholder'] = _x('Nhập Email của bạn', 'placeholder', 'devvn');
 
     //shipping
     $fields['shipping']['shipping_first_name'] = array(

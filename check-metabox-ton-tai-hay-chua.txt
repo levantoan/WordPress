@@ -1,0 +1,104 @@
+///////////////////////////////////////////////////////////php
+
+wp_nonce_field( 'dbh_save_meta_box_data', 'dbh_meta_box_nonce' );
+
+add_action( 'wp_ajax_devvn_pre_check_post', array( $this, 'devvn_pre_check_post') );
+function devvn_pre_check_post(){
+
+    parse_str($_POST['data'], $params);
+
+    $nonce_name   = isset( $params['dbh_meta_box_nonce'] ) && $params['dbh_meta_box_nonce'] ? wp_unslash($params['dbh_meta_box_nonce']) : '';
+    $nonce_action = 'dbh_save_meta_box_data';
+
+    if ( ! wp_verify_nonce( $nonce_name, $nonce_action ) ) {
+        wp_send_json_error(__('Có lỗi xảy ra', DEVVN_QLHOCVIEN_TEXTDOMAIN));
+    }
+
+    $dbh_mabaohanh = isset($params['dbh_mabaohanh']) && $params['dbh_mabaohanh'] ? wp_unslash($params['dbh_mabaohanh']) : '';
+    $post_ID = isset($params['post_ID']) && $params['post_ID'] ? wp_unslash($params['post_ID']) : '';
+
+    if($dbh_mabaohanh) {
+        $existing_post = get_posts(array(
+            'post_type' => 'cpt_bh_rang',
+            'meta_key' => 'dbh_mabaohanh',
+            'meta_value' => $dbh_mabaohanh,
+            'post__not_in' => array($post_ID),
+            'posts_per_page' => 1
+        ));
+
+        if (!empty($existing_post)) {
+            wp_send_json_error(__('Mã số thẻ đã tồn tại. Vui lòng kiểm tra lại!'));
+        }
+
+        wp_send_json_success();
+
+    }else {
+        wp_send_json_error(__('Mã số thẻ là bắt buộc!', DEVVN_QLHOCVIEN_TEXTDOMAIN));
+    }
+
+    die();
+
+}
+
+///////////////////////////////////////////////////////////js
+
+//check mã bảo hành là duy nhất khi tạo mã mới
+let submiting = false;
+let publicbtn = false;
+let checking = false;
+
+$('.post-type-cpt_bh_rang form#post input#publish').on('click', function (e){
+    /*let dbh_mabaohanh = $('#dbh_mabaohanh').val();
+    if(!dbh_mabaohanh){
+        alert('Mã học viên là bắt buộc'); return false;
+    }*/
+    publicbtn = true;
+});
+
+$('.post-type-cpt_bh_rang form#post').on('submit', function (e){
+    if(!checking) {
+        let form = $(this);
+        let formVal = form.serialize();
+        let dbh_mabaohanh = $('#dbh_mabaohanh').val();
+        if (dbh_mabaohanh) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: devvn_bhrang_admin.ajaxurl,
+                data: {
+                    action: "devvn_pre_check_post",
+                    data: formVal,
+                },
+                context: this,
+                beforeSend: function () {
+                    form.addClass('loading');
+                    submiting = true;
+                },
+                success: function (response) {
+                    if (response.success) {
+                        //form.get(0).submit();
+                        checking = true;
+                        if (publicbtn) {
+                            form.find('#publish').trigger('click');
+                        } else {
+                            form.submit();
+                        }
+                    } else {
+                        alert(response.data);
+                    }
+                    form.removeClass('loading');
+                    submiting = false
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    form.removeClass('loading');
+                    submiting = false
+                    alert(textStatus);
+                }
+            })
+        }
+
+    }
+});

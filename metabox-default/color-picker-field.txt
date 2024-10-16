@@ -1,0 +1,11 @@
+//css
+.wp-picker-holder {
+    position: absolute;
+}
+
+//js
+$('.phoimau_color').wpColorPicker();
+
+//php
+wp_enqueue_style( 'wp-color-picker' );
+wp_enqueue_script( 'wp-color-picker' );
