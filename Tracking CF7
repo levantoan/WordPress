@@ -1,0 +1,41 @@
+//Author https://gist.github.com/nguyenhungpro9x/d4fc53f908af4acc3356cdf3246dab72
+// Add the info to the email
+function wpshore_wpcf7_before_send_mail($array) {
+	global $wpdb;
+	if(wpautop($array['body']) == $array['body']) // The email is of HTML type
+		$lineBreak = "<br/>";
+	else
+		$lineBreak = "\n";
+	$trackingInfo .= $lineBreak . $lineBreak . '-- Tracking Info --' . $lineBreak;
+	$trackingInfo .= 'URL điền form: ' . $_SERVER['HTTP_REFERER'] . $lineBreak;
+	if (isset ($_SESSION['OriginalRef']) )
+		$trackingInfo .= 'Người dùng đến từ trang: ' . $_SESSION['OriginalRef'] . $lineBreak;
+	if (isset ($_SESSION['LandingPage']) )
+		$trackingInfo .= 'Trang đích trước khi điền form: ' . $_SESSION['LandingPage'] . $lineBreak;
+	if ( isset ($_SERVER["REMOTE_ADDR"]) )
+	$trackingInfo .= 'IP người dùng: ' . $_SERVER["REMOTE_ADDR"] . $lineBreak;
+	if ( isset ($_SERVER["HTTP_X_FORWARDED_FOR"]))
+		$trackingInfo .= 'User\'s Proxy Server IP: ' . $_SERVER["HTTP_X_FORWARDED_FOR"] . $lineBreak . $lineBreak;
+	if ( isset ($_SERVER["HTTP_USER_AGENT"]) )
+		$trackingInfo .= 'Thông tin trình duyệt: ' . $_SERVER["HTTP_USER_AGENT"] . $lineBreak;
+	$array['body'] = str_replace('[tracking-info]', $trackingInfo, $array['body']);
+    return $array;
+}
+add_filter('wpcf7_mail_components', 'wpshore_wpcf7_before_send_mail');
+// Original Referrer 
+function wpshore_set_session_values() 
+{
+	if (!session_id()) 
+	{
+		session_start();
+	}
+	if (!isset($_SESSION['OriginalRef'])) 
+	{
+		$_SESSION['OriginalRef'] = $_SERVER['HTTP_REFERER']; 
+	}
+	if (!isset($_SESSION['LandingPage'])) 
+	{
+		$_SESSION['LandingPage'] = "http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"]; 
+	}
+}
+add_action('init', 'wpshore_set_session_values');
